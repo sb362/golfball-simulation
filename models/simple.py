@@ -1,7 +1,28 @@
 import numpy as np
+import sys
 
 # Gravitational acceleration assuming no air resistance, in m/s/s
 g = 9.81
+
+
+# printf equivalent
+def printf(fmt, *args):
+	sys.stdout.write(fmt % args)
+
+
+# extract components from velocity
+def horizontal(velocity, theta):
+	return np.cos(theta) * velocity
+
+
+def vertical(velocity, theta):
+	return np.sin(theta) * velocity
+
+
+# force, dt, mass of ball to initial velocity
+# vi ~ F_avg * dt / mass
+def force_to_vi(force, dt, mass):
+	return force * dt / mass
 
 
 class Golfball:
@@ -10,9 +31,12 @@ class Golfball:
 		self._mass = 0.045
 		self._radius = 0.0425 / 2
 
-		# Launch properties
-		self._vi = 50.0
-		self._loft = np.deg2rad(45.0)
+		# Launch properties (in SI units)
+		self._vi = 100.0
+		self._loft = np.pi / 6
+
+		# Calculated in Golfball.update()
+		self._area = 0.0
 
 		self.update()
 
@@ -42,23 +66,31 @@ class Golfball:
 	def setloft(self, newloft):
 		self._loft = newloft
 
+	def set_vi(self, force, dt):
+		self._vi = force_to_vi(force, dt, self.mass())
+
 	def area(self):
 		return self._area
 
-	def volume(self):
-		return self._volume
+	def print(self):
+		printf("\tMass: %.2f g\n\tRadius: %.2f mm\n\tLoft: %.2f deg\n\tv_0: %.2f m/s\n\tArea: %.2f mm^2\n\n",
+			  self.mass() * 1000,
+			  self.radius() * 1000,
+			  self.loft(),
+			  self.vi(),
+			  self.area() * 1000
+			   )
 
 	# Updates properties like area and volume
 	def update(self):
 		self._area = 4 * np.pi * (self.radius() ** 2)
-		self._volume = 0.75 * np.pi * (self.radius() ** 3)
 
 	# Positions at given time (seconds)
 	def pos_x(self, time):
-		return self.vi() * np.cos(self.loft()) * time
+		return horizontal(self.vi(), self.loft()) * time
 
 	def pos_y(self, time):
-		return self.vi() * np.sin(self.loft()) * time - (0.5 * g * (time ** 2))
+		return vertical(self.vi(), self.loft()) * time - (0.5 * g * (time ** 2))
 
 	# Time of flight (pos_y == 0)
 	# TODO: scipy.optimize.fsolve could be useful here for complex models
