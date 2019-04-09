@@ -8,7 +8,7 @@ parser.add_argument("-g", "--gravity", type=float, default=9.81, help="g in m/s^
 # https://hypertextbook.com/facts/2001/EmilyAccamando.shtml
 # dt ~ 0.5 milliseconds, F ~ 9 kN
 
-parser.add_argument("-f", "--force", type=float, default=9000,help="Force appled by driver in newtons")
+parser.add_argument("-f", "--force", type=float, default=9000, help="Force appled by driver in newtons")
 parser.add_argument("-t", "--dt", type=float, default=0.0005, help="Contact time in seconds")
 
 params = parser.parse_args()
@@ -33,7 +33,7 @@ for theta in numpy.arange(math.pi / 12, math.pi / 4, math.pi / 36):
 	xres = []
 	yres = []
 
-	for time in numpy.linspace(0, 20, num=100):
+	for time in numpy.linspace(0, 500, endpoint=False, num=100):
 		x = calc_x(time, theta)
 		y = calc_y(time, theta)
 		if y < 0:
