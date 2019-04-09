@@ -76,7 +76,7 @@ class Golfball:
 		printf("\tMass: %.2f g\n\tRadius: %.2f mm\n\tLoft: %.2f deg\n\tv_0: %.2f m/s\n\tArea: %.2f mm^2\n\n",
 			  self.mass() * 1000,
 			  self.radius() * 1000,
-			  self.loft(),
+			  np.rad2deg(self.loft()),
 			  self.vi(),
 			  self.area() * 1000
 			   )
@@ -101,3 +101,6 @@ class Golfball:
 	def pos_data(self, t0, t1):
 		interval = np.linspace(t0, t1, 20)
 		return self.pos_x(interval), self.pos_y(interval)
+
+	# Do not override in subclasses
+	__pos_data = pos_data

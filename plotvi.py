@@ -13,4 +13,6 @@ for vi in np.arange(75, 155, 5):
 	plot.plot(x, y, label=format(vi, ".1f") + " m/s")
 
 plot.legend()
+plot.xlabel("x-position of ball (m)")
+plot.xlabel("y-position of ball (m)")
 plot.show()

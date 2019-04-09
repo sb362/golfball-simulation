@@ -7,6 +7,7 @@ import models.simple as simple
 def drag(area, cd, flowvelocity, density=1.225):
 	return 0.5 * density * (flowvelocity ** 2) * cd * area
 
+
 class Golfball(simple.Golfball):
 	def __init__(self):
 		simple.Golfball.__init__(self)
@@ -20,13 +21,16 @@ class Golfball(simple.Golfball):
 	def setcd(self, cd):
 		self._cd = cd
 
-	# Calculates the effect of drag on x-y position over time interval dt
-	# F = ma, a =
-	def pos_x_adjusted(self, time, dt):
-		return self.pos_x(time) - (drag(self.area(), self.cd(), 10) / self.mass()) * (dt**2)
-
-	# Returns position data over a given interval
 	def pos_data(self, t0, t1):
-		interval = np.linspace(t0, t1, 20)
-		return self.pos_x_adjusted(interval, 0), self.pos_y(interval)
+		x_raw, y_raw = self.__pos_data(t0, t1)
+		x_out = np.array([0])
+		y_out = np.array([0])
 
+		# make adjustments here
+
+		return x_out, y_out
+
+	# Time of flight (pos_y == 0)
+	# TODO: scipy.optimize.fsolve could be useful here for complex models
+	def tof(self):
+		return 0

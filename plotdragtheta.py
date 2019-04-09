@@ -1,16 +1,24 @@
-from models import drag
+from models import drag, simple
 from matplotlib import pyplot as plot
 import numpy as np
 import math as m
 
+ball = drag.Golfball()
+ball.setloft(m.pi / 6)
+ball.print()
 
-for theta in np.arange(m.pi / 6, m.pi / 3, m.pi / 36):
-	ball = drag.Golfball()
-	ball.setloft(theta)
-	ball.print()
+x, y = ball.pos_data(0, ball.tof())
+plot.plot(x, y, label=format(np.rad2deg(m.pi / 6), ".0f") + " degrees, w/ drag")
 
-	x, y = ball.pos_data(0, ball.tof())
-	plot.plot(x, y, label=format(np.rad2deg(theta), ".0f") + " degrees")
+ball = simple.Golfball()
+ball.setloft(m.pi / 6)
+ball.print()
+
+x, y = ball.pos_data(0, ball.tof())
+plot.plot(x, y, label=format(np.rad2deg(m.pi / 6), ".0f") + " degrees, w/o drag")
+
 
 plot.legend()
+plot.xlabel("x-position of ball (m)")
+plot.xlabel("y-position of ball (m)")
 plot.show()
