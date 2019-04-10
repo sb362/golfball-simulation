@@ -5,7 +5,7 @@ import models.simple as simple
 
 # F_d = 1/2 * air density * (flow velocity)^2 * coefficient of drag * surface area
 def drag(area, cd, flowvelocity, density=1.225):
-	return 0.5 * density * (flowvelocity ** 2) * cd * area
+	return 0.5 * density * (flowvelocity * np.abs(flowvelocity)) * cd * area
 
 
 class Golfball(simple.Golfball):
@@ -36,7 +36,7 @@ class Golfball(simple.Golfball):
 
 		# acceleration
 		a_x = -drag(self.area() / 2, self.cd(), v_x) / self.mass()
-		a_y = -drag(self.area() / 2, self.cd(), v_y) / self.mass() - simple.g
+		a_y = drag(self.area() / 2, self.cd(), v_y) / self.mass() - simple.g
 
 		# calculate everything over an interval (todo: figure out how to numpy-ify this)
 		i = 0
