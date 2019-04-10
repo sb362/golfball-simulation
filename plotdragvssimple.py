@@ -23,6 +23,8 @@ for theta in np.arange(np.deg2rad(40), np.deg2rad(50), np.deg2rad(5)):
 	x, y = res.T
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f")+" deg, w/ drag")
 
+	ball.print()
+
 for theta in np.arange(np.deg2rad(40), np.deg2rad(50), np.deg2rad(5)):
 	ball = simple2.Golfball()
 
@@ -32,6 +34,8 @@ for theta in np.arange(np.deg2rad(40), np.deg2rad(50), np.deg2rad(5)):
 	time, res = ball.solve(0, est_tof(initialVelocity, theta))
 	x, y = res.T
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f")+" deg, w/o drag")
+
+	ball.print()
 
 plot.legend()
 plot.show()

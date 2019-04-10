@@ -23,6 +23,8 @@ for vi in np.arange(20, 60, 10):
 	x, y = res.T
 	plot.plot(x, y, label=format(vi, ".0f") + " m/s, with drag")
 
+	ball.print()
+
 
 plot.legend()
 plot.show()
