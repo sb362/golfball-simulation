@@ -3,35 +3,11 @@ from matplotlib import pyplot as plot
 import numpy as np
 import math as m
 
-ball = drag.Golfball()
-ball.setloft(m.pi / 6)
-ball.print()
-
-x, y = ball.pos_data(0, ball.tof())
-plot.plot(x, y, label=format(np.rad2deg(m.pi / 6), ".0f") + " degrees, w/ drag")
-
-ball = simple.Golfball()
-ball.setloft(m.pi / 6)
-ball.print()
-
-x, y = ball.pos_data(0, ball.tof())
-plot.plot(x, y, label=format(np.rad2deg(m.pi / 6), ".0f") + " degrees, w/o drag")
-
-
-
-ball = drag.Golfball()
-ball.setloft(np.deg2rad(10))
-ball.print()
-x, y = ball.pos_data(0, ball.tof())
-plot.plot(x, y, label=format(10.0, ".0f") + " degrees, w/ drag")
-
-ball = simple.Golfball()
-ball.setloft(np.deg2rad(10))
-ball.print()
-
-x, y = ball.pos_data(0, ball.tof())
-plot.plot(x, y, label=format(10.0, ".0f") + " degrees, w/o drag")
-
+for theta in np.arange(m.pi / 6, m.pi / 3, m.pi / 36):
+    ball = drag.Golfball()
+    ball.setloft(theta)
+    x, y = ball.pos_data(0, ball.tof())
+    plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg")
 
 plot.legend()
 plot.xlabel("x-position of ball (m)")

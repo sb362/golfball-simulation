@@ -1,0 +1,67 @@
+
+from models import drag2, simple2
+from matplotlib import pyplot as plot
+import numpy as np
+
+# parse command line arguments
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-li", "--loftinitial", type=float, default=40, help="Minimum loft in degrees")
+parser.add_argument("-lf", "--loftfinal", type=float, default=50, help="Maximum loft in degrees ")
+parser.add_argument("-st", "--stepsize", type=float, default=5, help="Step size")
+parser.add_argument("-dt", "--dt", type=float, default=0.01, help="Time step - decrease this value if you see lines rather than curves")
+parser.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity to use")
+parser.add_argument("-y0", "--height", type=float, default=0, help="Initial height to use")
+
+args = parser.parse_args()
+
+assert args.loftinitial < args.loftfinal
+assert args.stepsize < (args.loftfinal - args.loftinitial)
+
+# initial velocity = 50 m/s
+initialVelocity = args.velocity
+
+# extract components of velocity
+def components_of(v, theta):
+	return v * np.cos(theta), v * np.sin(theta)
+
+# estimate time of flight (assumes no air resistance)
+def est_tof(v, theta):
+	vy = v * np.sin(theta)
+	return (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
+
+
+# Plot for a range of loft angles
+plot.figure(1)
+for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
+	# Drag model
+	ball = drag2.Golfball()
+
+	# Set initial velocity
+	vx, vy = components_of(initialVelocity, theta)
+	ball.set_coords([0, args.height, vx, vy])
+
+	# Solve eqn and plot
+	time, res = ball.solve(0, est_tof(initialVelocity, theta), args.dt)
+	x, y = res.T
+	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f")+" deg, w/ drag")
+
+	# Simple model
+	ball = simple2.Golfball()
+
+	# Set initial velocity
+	vx, vy = components_of(initialVelocity, theta)
+	ball.set_coords([0, args.height, vx, vy])
+
+	# Solve eqn and plot
+	time, res = ball.solve(0, est_tof(initialVelocity, theta), args.dt)
+	x, y = res.T
+	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/o drag")
+
+
+plot.xlabel("x-position (m)")
+plot.ylabel("y-position (m)")
+plot.title("Ballistic trajectory of golf ball")
+plot.legend()
+plot.show()

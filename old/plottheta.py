@@ -13,4 +13,6 @@ for theta in np.arange(m.pi / 6, m.pi / 3, m.pi / 36):
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".0f") + " degrees")
 
 plot.legend()
+plot.xlabel("x-position of ball (m)")
+plot.ylabel("y-position of ball (m)")
 plot.show()

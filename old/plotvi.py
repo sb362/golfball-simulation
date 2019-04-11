@@ -14,5 +14,5 @@ for vi in np.arange(75, 155, 5):
 
 plot.legend()
 plot.xlabel("x-position of ball (m)")
-plot.xlabel("y-position of ball (m)")
+plot.ylabel("y-position of ball (m)")
 plot.show()
