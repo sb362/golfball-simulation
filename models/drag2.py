@@ -6,7 +6,7 @@ g = 9.81
 
 # F_d = 1/2 * air density * (flow velocity)^2 * coefficient of drag * surface area
 def drag(area, cd, velocity, density=1.225):
-	return 0.5 * density * (velocity ** 2) * cd * area
+	return 0.5 * density * velocity * np.abs(velocity) * cd * area
 
 
 class Golfball(simple2.Golfball):
@@ -16,7 +16,7 @@ class Golfball(simple2.Golfball):
 		self.cd = 0.3
 
 	def accelerations(self):
-		fg = np.array([0, -g])
+		fg = np.array([0, -g * self.mass])
 		fd = -drag(self.area(), self.cd, self.velocities())
 
 		return (fg + fd) / self.mass

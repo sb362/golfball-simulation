@@ -14,11 +14,13 @@ class Golfball:
 		self.mass = 0.045
 		self.radius = 0.04267
 
+	# Reference area NOT surface area
+	# For a sphere this is the cross-sectional area
 	def area(self):
-		return 4 * np.pi * self.radius ** 2
+		return np.pi * self.radius**2
 
 	def print(self):
-		print("mass: {:.1f} kg\nradius: {:.1f} m\narea: {:.1f} m^2\nx: {:.1f} m\ny: {:.1f} m\nvx: {:.1f} m/s\nvy: {:.1f} m/s\n".format(self.mass, self.radius, self.area(), self.x, self.y, self.vx, self.vy))
+		print("mass: {:.5f} kg\nradius: {:.5f} m\narea: {:.5f} m^2\nx: {:.3f} m\ny: {:.3f} m\nvx: {:.3f} m/s\nvy: {:.3f} m/s\n".format(self.mass, self.radius, self.area(), self.x, self.y, self.vx, self.vy))
 
 	def set_coords(self, coords):
 		self.x, self.y, self.vx, self.vy = coords
@@ -34,7 +36,7 @@ class Golfball:
 
 	def accelerations(self):
 		# [x accel, y accel]
-		fg = np.array([0, -g])
+		fg = np.array([0, -g * self.mass])
 
 		return fg / self.mass
 
