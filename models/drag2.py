@@ -1,7 +1,7 @@
 import numpy as np
 from models import simple2
 
-g = 9.81
+g = simple2.g
 
 
 # F_d = 1/2 * air density * (flow velocity)^2 * coefficient of drag * surface area

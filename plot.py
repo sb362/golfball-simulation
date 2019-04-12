@@ -1,7 +1,8 @@
 
-from models import drag2, simple2
+from models import drag2, simple2, lift2
 from matplotlib import pyplot as plot
 import numpy as np
+from scipy.optimize import minimize
 
 # parse command line arguments
 import argparse
@@ -17,7 +18,8 @@ parser.add_argument("-y0", "--height", type=float, default=0, help="Initial heig
 args = parser.parse_args()
 
 assert args.loftinitial < args.loftfinal
-assert args.stepsize < (args.loftfinal - args.loftinitial)
+assert args.stepsize <= (args.loftfinal - args.loftinitial)
+assert args.stepsize != 0
 
 # initial velocity = 50 m/s
 initialVelocity = args.velocity
@@ -31,6 +33,10 @@ def est_tof(v, theta):
 	vy = v * np.sin(theta)
 	return (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
 
+
+maxdist = 0
+maxtheta = 0
+withlift = False
 
 # Plot for a range of loft angles
 plot.figure(1)
@@ -47,8 +53,14 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 	x, y = res.T
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f")+" deg, w/ drag")
 
+	# update maximum value
+	if x[-1] >= maxdist:
+		maxtheta = theta
+		maxdist = x[-1]
+		withlift = False
+
 	# Simple model
-	ball = simple2.Golfball()
+	ball = lift2.Golfball()
 
 	# Set initial velocity
 	vx, vy = components_of(initialVelocity, theta)
@@ -57,11 +69,20 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 	# Solve eqn and plot
 	time, res = ball.solve(0, est_tof(initialVelocity, theta), args.dt)
 	x, y = res.T
-	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/o drag")
+	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/ drag and lift")
 
+	# update maximum value
+	if x[-1] >= maxdist:
+		maxtheta = theta
+		maxdist = x[-1]
+		withlift = True
+
+
+print("Maximum distance: " + format(maxdist, ".2f") + " m @ " + format(np.rad2deg(maxtheta), ".1f") + " deg")
+print(withlift)
 
 plot.xlabel("x-position (m)")
 plot.ylabel("y-position (m)")
-plot.title("Ballistic trajectory of golf ball")
+plot.title("Ballistic trajectory of golf ball (v_i = " + format(initialVelocity, ".1f") + " m/s)")
 plot.legend()
 plot.show()

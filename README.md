@@ -24,7 +24,7 @@ Open a terminal
 May also require:\
 ``apt-get install python3-tk``
 #### Mac
-Get Python here (3 or 3.5 should work) and follow instructions: https://www.python.org/downloads/mac-osx/
+Get Python here (3 or later should work) and follow instructions: https://www.python.org/downloads/mac-osx/
 
 Open a terminal
 - Get pip3 with `easy_install pip3` or `sudo easy_install pip3`
