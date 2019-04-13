@@ -1,21 +1,21 @@
 import numpy as np
-from models import drag2
+from models import lift2
 
-g = drag2.g
-drag = drag2.drag
+g = lift2.g
+drag = lift2.drag
 
-angularvelocity = np.array([6, 5])
+angularvelocity = np.array([0, 200/60])
 
 
 def lift(radius, cl, velocity, angular, density=1.225):
 	return cl * 4.0/3 * (4 * np.pi**2 * density * radius**3 * np.cross(velocity, angular))
 
 
-class Golfball(drag2.Golfball):
+class Golfball(lift2.Golfball):
 	def __init__(self):
-		drag2.Golfball.__init__(self)
+		lift2.Golfball.__init__(self)
 
-		self.cl = 0.25
+		self.cd = 0.15
 
 	def accelerations(self):
 		fg = np.array([0, -g * self.mass])
