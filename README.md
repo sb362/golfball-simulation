@@ -3,36 +3,26 @@
 
 ### Requirements
 #### Python
-Only tested on Python 3/3.5 - might work on earlier versions
+3.7
 #### Packages
 `numpy` for all the maths\
 `scipy` for solving ODEs\
 `matplotlib` for plotting
 
 To install the above: \
-`pip install --user numpy scipy matplotlib`\
-or: \
-`pip3 install --user numpy scipy matplotlib`
+`python3 -m pip install --user numpy scipy matplotlib`
 
 ### Installation
 #### Linux
 Open a terminal
 - Install Python with\
-`apt-get install python3 pip3`
+`apt-get install python3`
 - Install the packages listed above
 
 May also require:\
 ``apt-get install python3-tk``
-#### Mac
-Get Python here (3 or later should work) and follow instructions: https://www.python.org/downloads/mac-osx/
-
-Open a terminal
-- Get pip3 with `easy_install pip3` or `sudo easy_install pip3`
-- Install the packages listed above
 
 ### Usage
-Set current directory to wherever `plot.py` is with\
-`cd <location>`
 
 Generate a plot with\
 `python3 plot.py <optional parameters, --help for list of commands>`

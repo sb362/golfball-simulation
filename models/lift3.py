@@ -34,3 +34,10 @@ class Golfball(simple2.Golfball):
 
 		return (fg + fd + fl) / self.mass
 
+	def eqns(self, coords, t):
+		self.set_coords(coords)
+
+		if self.y < 0:
+			return np.zeros_like(coords)
+		else:
+			return self.derivatives()
