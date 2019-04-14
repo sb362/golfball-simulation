@@ -1,5 +1,5 @@
 
-from models import drag2, simple2, lift2, lift3, dimpled2
+from models import drag2, simple2, lift2, lift3
 from matplotlib import pyplot as plot
 import numpy as np
 from scipy.optimize import minimize
@@ -15,6 +15,7 @@ parser.add_argument("-dt", "--dt", type=float, default=0.01, help="Time step - d
 parser.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity to use")
 parser.add_argument("-y0", "--height", type=float, default=0, help="Initial height to use")
 parser.add_argument("-sp", "--spin", type=float, default=200, help="Spin parameter")
+parser.add_argument("-tb", "--timebonus", type=float, default=1, help="Useful for debugging, multiplies estimated time of flight")
 
 args = parser.parse_args()
 
@@ -25,18 +26,21 @@ assert args.stepsize != 0
 # initial velocity = 50 m/s
 initialVelocity = args.velocity
 
+
 # extract components of velocity
 def components_of(v, theta):
 	return v * np.cos(theta), v * np.sin(theta)
 
+
 # spin from launch angle
 def spin_from_theta(spin, theta):
-	return spin + theta/14
+	return spin - theta*14
+
 
 # estimate time of flight (assumes no air resistance / lift)
 def est_tof(v, theta):
 	vy = v * np.sin(theta)
-	return (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
+	return args.timebonus * (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
 
 
 # Plot for a range of loft angles

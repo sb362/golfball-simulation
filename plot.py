@@ -1,5 +1,5 @@
 
-from models import drag2, simple2, lift2, dimpled2
+from models import drag2, simple2, lift3
 from matplotlib import pyplot as plot
 import numpy as np
 from scipy.optimize import minimize
@@ -14,6 +14,10 @@ parser.add_argument("-st", "--stepsize", type=float, default=5, help="Step size"
 parser.add_argument("-dt", "--dt", type=float, default=0.01, help="Time step - decrease this value if you see lines rather than curves")
 parser.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity to use")
 parser.add_argument("-y0", "--height", type=float, default=0, help="Initial height to use")
+parser.add_argument("-tb", "--timebonus", type=float, default=1, help="Useful for debugging, multiplies estimated time of flight")
+parser.add_argument("-sp", "--spin", type=float, default=200, help="Spin parameter")
+parser.add_argument("-cd", "--drag", type=float, default=0.3, help="Drag coefficient")
+parser.add_argument("-cl", "--lift", type=float, default=0.02, help="Lift coefficient")
 
 args = parser.parse_args()
 
@@ -31,8 +35,11 @@ def components_of(v, theta):
 # estimate time of flight (assumes no air resistance)
 def est_tof(v, theta):
 	vy = v * np.sin(theta)
-	return (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
+	return args.timebonus * (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
 
+# spin from launch angle
+def spin_from_theta(spin, theta):
+	return spin + theta/14
 
 maxdist = 0
 maxtheta = 0
@@ -43,6 +50,7 @@ plot.figure(1)
 for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
 	# Drag model
 	ball = drag2.Golfball()
+	ball.cd = args.drag
 
 	# Set initial velocity
 	vx, vy = components_of(initialVelocity, theta)
@@ -60,11 +68,14 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 		withlift = False
 
 	# Lift model
-	ball = lift2.Golfball()
+	ball = lift3.Golfball()
+	ball.cd = args.drag
+	ball.cl = args.lift
 
 	# Set initial velocity
 	vx, vy = components_of(initialVelocity, theta)
 	ball.set_coords([0, args.height, vx, vy])
+	ball.set_spin(spin_from_theta(args.spin, theta))
 
 	# Solve eqn and plot
 	time, res = ball.solve(0, est_tof(initialVelocity, theta), args.dt)
@@ -77,28 +88,11 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 		maxdist = x[-1]
 		withlift = True
 
-	# Dimpled model
-	ball = dimpled2.Golfball()
-
-	# Set initial velocity
-	vx, vy = components_of(initialVelocity, theta)
-	ball.set_coords([0, args.height, vx, vy])
-
-	# Solve eqn and plot
-	time, res = ball.solve(0, est_tof(initialVelocity, theta), args.dt)
-	x, y = res.T
-	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/ drag, lift, dimpled")
-
-	# update maximum value
-	if x[-1] >= maxdist:
-		maxtheta = theta
-		maxdist = x[-1]
-		withlift = True
-
 
 print("Maximum distance: " + format(maxdist, ".2f") + " m @ " + format(np.rad2deg(maxtheta), ".1f") + " deg")
 print(withlift)
 
+plot.grid(True)
 plot.xlabel("x-position (m)")
 plot.ylabel("y-position (m)")
 plot.title("Ballistic trajectory of golf ball (v_i = " + format(initialVelocity, ".1f") + " m/s)")

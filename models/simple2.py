@@ -3,6 +3,7 @@ from scipy.integrate import odeint
 
 g = 9.81
 
+
 class Golfball:
 	def __init__(self):
 		self.x = 0
@@ -55,6 +56,6 @@ class Golfball:
 			return self.derivatives()
 
 	def solve(self, t0, t1, dt=0.01):
-		interval = np.linspace(t0, t1, (t1 - t0) / dt)
+		interval = np.linspace(t0, t1, int((t1 - t0) / dt))
 		return interval, odeint(self.eqns, self.coords(), interval)[:, :2]
 

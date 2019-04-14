@@ -21,7 +21,7 @@ class Golfball(simple2.Golfball):
 		self.cd = 0.3
 
 		# rotational properties
-		self.cl = 0.1
+		self.cl = 0.02
 		self.spin = 50
 
 	def set_spin(self, spin):
