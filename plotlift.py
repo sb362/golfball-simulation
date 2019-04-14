@@ -42,7 +42,7 @@ def est_tof(v, theta):
 	vy = v * np.sin(theta)
 	return args.timebonus * (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
 
-
+"""
 # Plot for a range of loft angles
 plot.figure(1)
 for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
@@ -71,8 +71,23 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/o lift")
 
 
-plot.xlabel("x-position (m)")
-plot.ylabel("y-position (m)")
-plot.title("Ballistic trajectory of golf ball (v_i = " + format(initialVelocity, ".1f") + " m/s)")
-plot.legend()
+"""
+for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
+	ball = lift3.Golfball()
+
+	vx, vy = components_of(initialVelocity, theta)
+	ball.set_coords([0, args.height, vx, vy])
+	ball.set_spin(spin_from_theta(args.spin, theta))
+
+	time, res = ball.solve(0, 10)
+	x, y = res.T
+
+	plot.plot(np.rad2deg(theta), [np.amax(x)], 'ro')
+	print(theta, np.amax(x))
+
+
+plot.grid(True)
+plot.xlabel("loft angle (degrees)")
+plot.ylabel("range (m)")
+plot.title("v_i = " + format(initialVelocity, ".1f") + " m/s)")
 plot.show()
