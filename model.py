@@ -177,15 +177,12 @@ if args.plot == 0:
 	plot.title("Ballistic trajectory of golf ball with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
 	plot.show()
 
-else:
+elif args.plot == 1:
 	ranges = []
 	thetas = []
 	for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 		ball = LiftGolfball(theta)
 		ball.spin -= theta/13
-
-		ball = LiftGolfball(theta)
-		ball.spin -= theta / 13
 
 		res = ball.solve(0, time_of_flight(args.velocity, theta))
 		x, y = res.T
@@ -206,7 +203,8 @@ else:
 	plot.ylabel("Range (m)")
 	plot.title("Range against loft angle, with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
 	plot.show()
-
+else:
+	print("Unknown plot")
 
 
 
