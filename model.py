@@ -65,8 +65,9 @@ def drag(area, cd, velocity, density):
 
 
 # Lift equation
-def lift():
-	return 0
+# Kutta-Joukowski equation/theorem for spinning, smooth ball
+def lift(radius, spin, velocity, cl, density):
+	return cl * 4/3 * (4 * np.pi**2 * radius**3 * spin * density * velocity)
 
 
 # Basic model (no drag, no lift, smooth)
@@ -153,14 +154,14 @@ class LiftGolfball(DragGolfball):
 		self.spin = args.spin
 
 	def acceleration(self):
-		fl = lift()
-
+		fl = lift(self.radius, self.spin, self.velocity(), self.cl, args.density)
 		return DragGolfball.acceleration(self) + fl / self.mass
 
 
 # Plot for a range of loft angles
 for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 	ball = LiftGolfball(theta)
+	ball.spin -= theta/2
 
 	if args.verbose:
 		print("theta:", theta, "deg", " tof:", time_of_flight(args.velocity, theta))
@@ -175,6 +176,7 @@ for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 	plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
 
+plot.legend()
 plot.grid(True)
 plot.xlabel("Distance (m)")
 plot.ylabel("Height (m)")
