@@ -30,20 +30,18 @@ loftrange = parser.add_argument_group("Plot parameters")
 loftrange.add_argument("-li", "--loftinitial", type=float, default=10, help="Minimum loft angle (degrees)")
 loftrange.add_argument("-lf", "--loftfinal", type=float, default=20, help="Maximum loft angle (degrees)")
 loftrange.add_argument("-st", "--step", type=float, default=2, help="Loft angle step (degrees)")
+loftrange.add_argument("--plot", type=int, default=0, help="Set to 1 for a range vs loft plot instead")
 
 # Debugging/experimental
 debugging = parser.add_argument_group("Debugging/experimental")
 debugging.add_argument("-v", "--verbose", action="store_true", help="Print extra information")
 debugging.add_argument("-dt", type=float, default=0.01, help="Time slice (decrease if graph looks linear)")
-debugging.add_argument("--fulloutput", type=int, default=0, help="See odeint documentation")
+debugging.add_argument("--fulloutput", action="store_true", help="See odeint documentation")
 debugging.add_argument("-tx", type=float, default=1, help="Time multiplier, increment if lines appear incomplete")
 
 # Parse arguments
 args = parser.parse_args()
 g = args.gravity
-
-if args.fulloutput != 0:
-	args.fulloutput = 1
 
 # Ensure arguments are within reality
 assert args.loftfinal > args.loftinitial, "Final loft angle must be gretaer than initial loft angle!"
@@ -159,25 +157,56 @@ class LiftGolfball(DragGolfball):
 
 
 # Plot for a range of loft angles
-for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
-	ball = LiftGolfball(theta)
-	ball.spin -= theta/13
+if args.plot == 0:
+	for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
+		ball = LiftGolfball(theta)
+		ball.spin -= theta/13
 
-	if args.verbose:
-		print("theta:", theta, "deg", " tof:", time_of_flight(args.velocity, theta))
+		if args.verbose:
+			print("theta:", theta, "deg", " tof:", time_of_flight(args.velocity, theta))
 
-	res = ball.solve(0, time_of_flight(args.velocity, theta))
-	x, y = res.T
+		res = ball.solve(0, time_of_flight(args.velocity, theta))
+		x, y = res.T
 
-	plot.plot(x, y, label=format(theta, ".1f") + " deg")
+		plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
+	plot.legend()
+	plot.grid(True)
+	plot.xlabel("Distance (m)")
+	plot.ylabel("Height (m)")
+	plot.title("Ballistic trajectory of golf ball with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
+	plot.show()
 
-plot.legend()
-plot.grid(True)
-plot.xlabel("Distance (m)")
-plot.ylabel("Height (m)")
-plot.title("Ballistic trajectory of golf ball with initial velocity " + format(args.velocity, ".0f") + " m/s")
-plot.show()
+else:
+	ranges = []
+	thetas = []
+	for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
+		ball = LiftGolfball(theta)
+		ball.spin -= theta/13
+
+		ball = LiftGolfball(theta)
+		ball.spin -= theta / 13
+
+		res = ball.solve(0, time_of_flight(args.velocity, theta))
+		x, y = res.T
+
+		range = np.amax(x)
+		if args.verbose:
+			print(theta, range)
+
+		thetas.append(theta)
+		ranges.append(range)
+
+	i = np.argmax(ranges)
+	print("Maximum is", ranges[i], "m when loft is", thetas[i], "degrees")
+
+	plot.plot(thetas, ranges, 'ro')
+	plot.grid(True)
+	plot.xlabel("Loft angle (deg)")
+	plot.ylabel("Range (m)")
+	plot.title("Range against loft angle, with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
+	plot.show()
+
 
 
 
