@@ -35,6 +35,7 @@ parser.add_argument("-dt", type=float, default=0.01)
 #parser.add_argument("--continuous", action="store_true")
 #parser.add_argument("--odemethod", type=str, default="RK45")
 parser.add_argument("--fulloutput", default=0, type=int)
+parser.add_argument("-tx", default=1, type=float)
 
 # Parse arguments
 args = parser.parse_args()
@@ -56,7 +57,7 @@ assert args.decay == 0, "Spin decay rate is not implemented."
 # Time of flight for basic golfball
 def time_of_flight(v, theta):
 	vy = v * np.sin(np.deg2rad(theta))
-	return (2 * vy + np.sqrt(vy ** 2 + 2 * g * args.height)) / g
+	return args.tx * (2 * vy + np.sqrt(vy ** 2 + 2 * g * args.height)) / g
 
 
 # Drag equation (F_d = 1/2 * rho * ref area * coefficient of drag * v|v|)
@@ -154,7 +155,7 @@ class LiftGolfball(DragGolfball):
 		self.spin = args.spin
 
 	def acceleration(self):
-		fl = lift(self.radius, self.spin, self.velocity(), self.cl, args.density)
+		fl = np.array([0, lift(self.radius, self.spin, self.velocity()[0], self.cl, args.density)])
 		return DragGolfball.acceleration(self) + fl / self.mass
 
 
