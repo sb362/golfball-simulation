@@ -8,8 +8,8 @@ from scipy.optimize import minimize
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-li", "--loftinitial", type=float, default=40, help="Minimum loft in degrees")
-parser.add_argument("-lf", "--loftfinal", type=float, default=50, help="Maximum loft in degrees ")
+parser.add_argument("-li", "--loftinitial", type=float, default=10, help="Minimum loft in degrees")
+parser.add_argument("-lf", "--loftfinal", type=float, default=30, help="Maximum loft in degrees ")
 parser.add_argument("-st", "--stepsize", type=float, default=5, help="Step size")
 parser.add_argument("-dt", "--dt", type=float, default=0.01, help="Time step - decrease this value if you see lines rather than curves")
 parser.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity to use")

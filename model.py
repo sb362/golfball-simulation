@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 
 from scipy.integrate import solve_ivp
+from scipy.integrate import odeint
 from matplotlib import pyplot as plot
 
 parser = argparse.ArgumentParser()
@@ -11,7 +12,7 @@ parser.add_argument("-m", "--mass", default=0.045, help="Mass of ball (kg)")
 parser.add_argument("-r", "--radius", default=0.04267, help="Radius of ball (m)")
 
 parser.add_argument("-cd", "--drag", type=float, default=0, help="Coefficient of drag")
-parser.add_argument("-cl", "--lift", type=float, default=0, help="Coefficient of drag")
+parser.add_argument("-cl", "--lift", type=float, default=0, help="Coefficient of lift")
 
 parser.add_argument("-g", "--gravity", type=float, default=9.81, help="For when we get a Mars base (m/s/s)")
 parser.add_argument("-d", "--density", type=float, default=1.225, help="Density of air (kg m^-3)")
@@ -29,22 +30,33 @@ parser.add_argument("-lf", "--loftfinal", type=float, default=20, help="Maximum 
 parser.add_argument("-st", "--step", type=float, default=2, help="Loft angle step (degrees)")
 
 # Debugging/experimental
-parser.add_argument("--samples", type=int, default=100, help="Number of time samples to use")
-parser.add_argument("--continuous", action="store_true")
-parser.add_argument("--odemethod", type=str, default="RK45")
+parser.add_argument("-v", "--verbose", action="store_true")
+parser.add_argument("-dt", type=float, default=0.01)
+#parser.add_argument("--continuous", action="store_true")
+#parser.add_argument("--odemethod", type=str, default="RK45")
+parser.add_argument("--fulloutput", default=0, type=int)
 
 # Parse arguments
 args = parser.parse_args()
-g = args.g
+g = args.gravity
+
+if args.fulloutput != 0:
+	args.fulloutput = 1
 
 # Ensure arguments are within reality
 assert args.loftfinal > args.loftinitial, "Final loft angle must be gretaer than initial loft angle!"
 assert args.step != 0, "Step must be non-zero!"
-assert ((args.loftfinal - args.loftinital) / args.step).is_integer(), "Step size must divide the change in loft angle!"
+assert ((args.loftfinal - args.loftinitial) / args.step).is_integer(), "Step size must divide the change in loft angle!"
 
 assert args.mass != 0, "Mass must be non-zero."
 
 assert args.decay == 0, "Spin decay rate is not implemented."
+
+
+# Time of flight for basic golfball
+def time_of_flight(v, theta):
+	vy = v * np.sin(np.deg2rad(theta))
+	return (2 * vy + np.sqrt(vy ** 2 + 2 * g * args.height)) / g
 
 
 # Drag equation (F_d = 1/2 * rho * ref area * coefficient of drag * v|v|)
@@ -88,11 +100,7 @@ class BasicGolfball:
 		return np.array([self.vx, self.vy])
 
 	def acceleration(self):
-		fg = np.array([0, -g * self.mass])
-
-		return fg / self.mass
-
-	__acceleration = acceleration
+		return np.array([0, -g])
 
 	# Returns system of differential equations to solve
 	def differentials(self):
@@ -105,8 +113,9 @@ class BasicGolfball:
 	# Finds trajectory of golf ball over given interval
 	# https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
 	def solve(self, t0=0, t1=10):
-		interval = np.linspace(t0, t1, args.samples)
-		return solve_ivp(self.__eqns, t_span=interval, y0=self.coords(), method=args.odemethod, dense_output=args.continuous)
+		interval = np.linspace(t0, t1, (t1 - t0) / args.dt)
+		#return solve_ivp(self.__eqns, t_span=interval, y0=self.coords(), method=args.odemethod, dense_output=args.continuous)
+		return odeint(self.__eqns, self.coords(), interval, tfirst=True, full_output=args.fulloutput)[:, :2]
 
 	# Internal, do not call - returns set of eqns to be solved by SciPy
 	def __eqns(self, t, coords):
@@ -115,6 +124,9 @@ class BasicGolfball:
 		# Ensure golf ball doesn't dig through the Earth
 		if self.y < 0:
 			return np.zeros_like(coords)
+
+		if args.verbose:
+			print(self.position(), self.velocity(), self.acceleration())
 
 		return self.differentials()
 
@@ -146,12 +158,21 @@ class LiftGolfball(DragGolfball):
 		return DragGolfball.acceleration(self) + fl / self.mass
 
 
-
 # Plot for a range of loft angles
 for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 	ball = LiftGolfball(theta)
-	print(ball.solve(0, 10).status)
 
+	if args.verbose:
+		print("theta:", theta, "deg", " tof:", time_of_flight(args.velocity, theta))
+
+	res = ball.solve(0, time_of_flight(args.velocity, theta))
+	x, y = res.T#res.y[0:2]
+
+	#if (res.status != 0):
+	#	print("Error when solving @", theta, "degrees:", res.message)
+	#	break
+	#else:
+	plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
 
 plot.grid(True)

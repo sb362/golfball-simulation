@@ -42,7 +42,7 @@ def est_tof(v, theta):
 	vy = v * np.sin(theta)
 	return args.timebonus * (2 * vy + np.sqrt(vy**2 + 2*simple2.g*args.height)) / simple2.g
 
-"""
+
 # Plot for a range of loft angles
 plot.figure(1)
 for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
@@ -70,8 +70,8 @@ for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal),
 	x, y = res.T
 	plot.plot(x, y, label=format(np.rad2deg(theta), ".1f") + " deg, w/o lift")
 
-
-"""
+plot.show()
+plot.figure(2)
 for theta in np.arange(np.deg2rad(args.loftinitial), np.deg2rad(args.loftfinal), np.deg2rad(args.stepsize)):
 	ball = lift3.Golfball()
 
