@@ -1,41 +1,42 @@
 import argparse
 import numpy as np
 
-from scipy.integrate import solve_ivp
 from scipy.integrate import odeint
 from matplotlib import pyplot as plot
 
 parser = argparse.ArgumentParser()
 
 # Ball parameters
-parser.add_argument("-m", "--mass", default=0.045, help="Mass of ball (kg)")
-parser.add_argument("-r", "--radius", default=0.04267, help="Radius of ball (m)")
+constants = parser.add_argument_group("Constants")
+constants.add_argument("-m", "--mass", default=0.045, help="Mass of ball (kg)")
+constants.add_argument("-r", "--radius", default=0.04267, help="Radius of ball (m)")
 
-parser.add_argument("-cd", "--drag", type=float, default=0, help="Coefficient of drag")
-parser.add_argument("-cl", "--lift", type=float, default=0, help="Coefficient of lift")
+constants.add_argument("-cd", "--drag", type=float, default=0, help="Coefficient of drag")
+constants.add_argument("-cl", "--lift", type=float, default=0, help="Coefficient of lift")
 
-parser.add_argument("-g", "--gravity", type=float, default=9.81, help="For when we get a Mars base (m/s/s)")
-parser.add_argument("-d", "--density", type=float, default=1.225, help="Density of air (kg m^-3)")
+constants.add_argument("-g", "--gravity", type=float, default=9.81, help="For when we get a Mars base (m/s/s)")
+constants.add_argument("-d", "--density", type=float, default=1.225, help="Density of air (kg m^-3)")
 
 # Initial parameters
-parser.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity (m/s)")
-parser.add_argument("-yi", "--height", type=float, default=0, help="Initial height (m)")
+initialparams = parser.add_argument_group("Initial parameters")
+initialparams.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity (m/s)")
+initialparams.add_argument("-yi", "--height", type=float, default=0, help="Initial height (m)")
 
-parser.add_argument("-sp", "--spin", type=float, default=0, help="Spin")
-parser.add_argument("--decay", type=float, default=0, help="Spin decay rate")
+initialparams.add_argument("-sp", "--spin", type=float, default=0, help="Spin")
+initialparams.add_argument("--decay", type=float, default=0, help="Spin decay rate")
 
 # Range of loft angles
-parser.add_argument("-li", "--loftinitial", type=float, default=10, help="Minimum loft angle (degrees)")
-parser.add_argument("-lf", "--loftfinal", type=float, default=20, help="Maximum loft angle (degrees)")
-parser.add_argument("-st", "--step", type=float, default=2, help="Loft angle step (degrees)")
+loftrange = parser.add_argument_group("Plot parameters")
+loftrange.add_argument("-li", "--loftinitial", type=float, default=10, help="Minimum loft angle (degrees)")
+loftrange.add_argument("-lf", "--loftfinal", type=float, default=20, help="Maximum loft angle (degrees)")
+loftrange.add_argument("-st", "--step", type=float, default=2, help="Loft angle step (degrees)")
 
 # Debugging/experimental
-parser.add_argument("-v", "--verbose", action="store_true")
-parser.add_argument("-dt", type=float, default=0.01)
-#parser.add_argument("--continuous", action="store_true")
-#parser.add_argument("--odemethod", type=str, default="RK45")
-parser.add_argument("--fulloutput", default=0, type=int)
-parser.add_argument("-tx", default=1, type=float)
+debugging = parser.add_argument_group("Debugging/experimental")
+debugging.add_argument("-v", "--verbose", action="store_true", help="Print extra information")
+debugging.add_argument("-dt", type=float, default=0.01, help="Time slice (decrease if graph looks linear)")
+debugging.add_argument("--fulloutput", type=int, default=0, help="See odeint documentation")
+debugging.add_argument("-tx", type=float, default=1, help="Time multiplier, increment if lines appear incomplete")
 
 # Parse arguments
 args = parser.parse_args()
@@ -113,10 +114,8 @@ class BasicGolfball:
 		return derivatives
 
 	# Finds trajectory of golf ball over given interval
-	# https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html
 	def solve(self, t0=0, t1=10):
 		interval = np.linspace(t0, t1, (t1 - t0) / args.dt)
-		#return solve_ivp(self.__eqns, t_span=interval, y0=self.coords(), method=args.odemethod, dense_output=args.continuous)
 		return odeint(self.__eqns, self.coords(), interval, tfirst=True, full_output=args.fulloutput)[:, :2]
 
 	# Internal, do not call - returns set of eqns to be solved by SciPy
@@ -162,18 +161,14 @@ class LiftGolfball(DragGolfball):
 # Plot for a range of loft angles
 for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 	ball = LiftGolfball(theta)
-	ball.spin -= theta/2
+	ball.spin -= theta/13
 
 	if args.verbose:
 		print("theta:", theta, "deg", " tof:", time_of_flight(args.velocity, theta))
 
 	res = ball.solve(0, time_of_flight(args.velocity, theta))
-	x, y = res.T#res.y[0:2]
+	x, y = res.T
 
-	#if (res.status != 0):
-	#	print("Error when solving @", theta, "degrees:", res.message)
-	#	break
-	#else:
 	plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
 
