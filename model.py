@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 # Ball parameters
 constants = parser.add_argument_group("Constants")
 constants.add_argument("-m", "--mass", default=0.045, help="Mass of ball (kg)")
-constants.add_argument("-r", "--radius", default=0.04267, help="Radius of ball (m)")
+constants.add_argument("-r", "--radius", default=0.04267/2, help="Radius of ball (m)")
 
 constants.add_argument("-cd", "--drag", type=float, default=0, help="Coefficient of drag")
 constants.add_argument("-cl", "--lift", type=float, default=0, help="Coefficient of lift")
@@ -153,6 +153,7 @@ class LiftGolfball(DragGolfball):
 
 	def acceleration(self):
 		fl = np.array([0, lift(self.radius, self.spin, self.velocity()[0], self.cl, args.density)])
+
 		return DragGolfball.acceleration(self) + fl / self.mass
 
 
@@ -177,6 +178,7 @@ if args.plot == 0:
 	plot.title("Ballistic trajectory of golf ball with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
 	plot.show()
 
+# Plot range against loft angle
 elif args.plot == 1:
 	ranges = []
 	thetas = []
@@ -203,6 +205,29 @@ elif args.plot == 1:
 	plot.ylabel("Range (m)")
 	plot.title("Range against loft angle, with an initial velocity of " + format(args.velocity, ".0f") + " m/s")
 	plot.show()
+
+# Plot for several initial velocities
+elif args.plot == 2:
+	for vi in np.arange(args.loftinitial, args.loftfinal, args.step):
+		ball = LiftGolfball(25)
+		ball.vx = vi * np.cos(np.deg2rad(25))
+		ball.vy = vi * np.sin(np.deg2rad(25))
+
+		if args.verbose:
+			print("vi:", vi, "m/s", " tof:", time_of_flight(vi, 25))
+
+		res = ball.solve(0, time_of_flight(args.velocity, 25))
+		x, y = res.T
+
+		plot.plot(x, y, label=format(vi, ".1f") + " m/s")
+
+	plot.legend()
+	plot.grid(True)
+	plot.xlabel("Distance (m)")
+	plot.ylabel("Height (m)")
+	plot.title("Ballistic trajectory of golf ball with loft angle of 25 degrees")
+	plot.show()
+
 else:
 	print("Unknown plot")
 
