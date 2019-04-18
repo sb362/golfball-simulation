@@ -17,7 +17,6 @@ constants.add_argument("-g", "--gravity", type=float, default=9.81, help="For wh
 constants.add_argument("-d", "--density", type=float, default=1.225, help="Density of air (kg m^-3)")
 constants.add_argument("--viscosity", type=float, default=1.46e-5, help="Kinematic viscosity of air")
 
-
 # Initial parameters
 initialparams = parser.add_argument_group("Initial parameters")
 initialparams.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity (m/s)")
@@ -28,11 +27,9 @@ initialparams.add_argument("-spy", "--spiny", type=float, default=0, help="Spin 
 initialparams.add_argument("-spx", "--spinx", type=float, default=0, help="Spin (x)")
 
 # Loft angle
-parser.add_argument("-l", "--loft", type=float, default=30, help="Loft angle")
-
 parser.add_argument("-li", "--loftinitial", type=float, default=10, help="Loft angle (initial)")
-parser.add_argument("-lf", "--loftfinal", type=float, default=30, help="Loft angle (final)")
-parser.add_argument("-st", "--step", type=float, default=5, help="Loft angle (step)")
+parser.add_argument("-lf", "--loftfinal", type=float, default=20, help="Loft angle (final)")
+parser.add_argument("-st", "--step", type=float, default=1, help="Loft angle (step)")
 
 # Debugging
 parser.add_argument("-v", "--verbose", action="store_true")
@@ -40,25 +37,38 @@ parser.add_argument("-v", "--verbose", action="store_true")
 # Parse args
 args = parser.parse_args()
 
+# Input validation
+assert args.loftfinal > args.loftinitial, "Final loft angle must be gretaer than initial loft angle!"
+assert args.step != 0, "Step must be non-zero!"
+assert ((args.loftfinal - args.loftinitial) / args.step).is_integer(), "Step size must divide the change in loft angle!"
+
+assert args.mass != 0, "Mass must be non-zero."
+assert args.radius != 0, "Radius must be non-zero."
+assert args.viscosity != 0, "Kinematic viscosity must be non-zero."
+assert args.density != 0, "Density of air must be non-zero."
+
 g = args.gravity
 density = args.density
 
-# Coefficient of drag from Reynolds number
-# Generated using numpy.polyfit(x, y, 4)
+
+# Coefficient of drag from Reynolds number, based on degree four polynomial.
 def re_to_cd(re):
+	# Clamp output value as it is only an approximation
 	if re > 120000:
 		return 0.370
 
+	# Array of coefficients
 	coeffs = np.array([
 			  9.46410458e-20, -3.80736984e-14,
 			  5.72048806e-09, -3.81337408e-04,
 			  9.92620188e+00
 			])
 
+	# Return value of polynomial approximation
 	return np.polyval(coeffs, re)
 
 
-# Linear velocity to Reynolds number
+# Linear velocity to Reynolds number (Re = velocity * diameter / k. viscosity)
 def reynolds(velocity, radius):
 	return 2 * radius * velocity / args.viscosity
 
@@ -67,23 +77,28 @@ def reynolds(velocity, radius):
 def sphere_cd(velocity, radius):
 	cd = re_to_cd(reynolds(velocity, radius))
 
+	# Clamp output value since the approximation isn't accurate for low velocities
 	return cd if velocity >= 18 else 0.8
 
 
 # Drag equation
+# F_d = 1/2 * air density * ref. area * coefficient * |velocity| * v
 def drag(density, area, cd, velocity):
 	return -0.5 * density * area * cd * norm(velocity) * velocity
 
 
 # Lift equation
+# F_l = 1/2 * air density * ref. area * coefficient * |v|^2 * (what x vhat)
 def lift(density, area, cl, velocity, rvelocity):
 	if norm(rvelocity) == 0:
 		return 0
 
 	S = 0.5 * density * area * cl
 
-	# Get cross product of angular velocity & linear velocity and make it a unit vector
+	# Cross product of angular velocity and linear velocity
 	vxr = np.cross(rvelocity, velocity)
+
+	# vxr / norm(vxr) is a unit vector, magnitude of spin is considered in coefficient of lift
 	return S * norm(velocity)**2 / norm(vxr) * vxr
 
 
@@ -103,6 +118,7 @@ class BasicGolfball:
 		self.vy = 0
 		self.vz = 0
 
+		# Rotational velocities
 		self.rvx = 0
 		self.rvy = 0
 		self.rvz = 0
@@ -177,11 +193,12 @@ class BasicGolfball:
 		interval = np.linspace(t0, t1, (t1 - t0) / dt)
 		return integrate(self.__eqns, self.coords(), interval, tfirst=True)[:, :3]
 
-
+# Simple golf ball but with drag
 class DragGolfball(BasicGolfball):
 	def __init__(self):
 		BasicGolfball.__init__(self)
 
+	# Coefficient of drag from velocity & radius
 	def cd(self):
 		return sphere_cd(norm(self.velocity()), self.radius)
 
@@ -190,52 +207,29 @@ class DragGolfball(BasicGolfball):
 		return BasicGolfball.acceleration(self) + fd / self.mass
 
 
+# Golfball with lift and drag
 class LiftGolfball(DragGolfball):
 	def __init__(self):
 		DragGolfball.__init__(self)
 
+	# Returns spin factor
 	def spinf(self):
 		v = norm(self.velocity())
 		w = norm(self.rvelocity())
 		return w / v
 
+	# Returns coefficient of lift based on spin factor
 	def cl(self):
-		return 0.22 * self.spinf()
+		return 0.1 * self.spinf()
 
 	def acceleration(self):
 		fl = lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())
-		#fl[0] = 0
-
 		return DragGolfball.acceleration(self) + fl / self.mass
 
+	# Spin decreases by about 1% every second
 	def racceleration(self):
 		return -0.01 * self.rvelocity()
 
-
-theta = np.radians(args.loft)
-
-# Ball without drag
-ball = BasicGolfball()
-ball.set_velocity(args.velocity, theta)
-
-# Ball with drag
-ball2 = DragGolfball()
-ball2.set_velocity(args.velocity, theta)
-
-# Ball with drag and lift
-ball3 = LiftGolfball()
-ball3.set_velocity(args.velocity, theta)
-ball3.set_spin([args.spinx, args.spiny, args.spin])
-
-# Solve
-res = ball.solve(0, 10)
-x, y, z = res.T
-
-res2 = ball2.solve(0, 10)
-x2, y2, z2 = res2.T
-
-res3 = ball3.solve(0, 100)
-x3, y3, z3 = res3.T
 
 # Plot for a range of loft angles
 fig = plot.figure(figsize=plot.figaspect(2))
@@ -254,12 +248,12 @@ for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
 
 ax.set_xlabel("Distance (m)")
 ax.set_ylabel("Height (m)")
+ax.set_zlabel("Horizontal displacement (m)")
 ax.legend()
 
 ax2.set_xlabel("Distance (m)")
 ax2.set_ylabel("Height (m)")
 ax2.legend()
-
 
 plot.show()
 
