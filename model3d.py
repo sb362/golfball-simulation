@@ -232,29 +232,45 @@ class LiftGolfball(DragGolfball):
 
 
 # Plot for a range of loft angles
-fig = plot.figure(figsize=plot.figaspect(2))
-ax = fig.add_subplot(2, 1, 2, projection="3d")
-ax2 = fig.add_subplot(2, 1, 1)
+#fig = plot.figure(figsize=plot.figaspect(2))
+#fig = plot.figure()
+#ax = fig.add_subplot(2, 1, 2, projection="3d")
+#ax2 = fig.add_subplot(2, 1, 1)
 for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
-	ball = LiftGolfball()
+	ball = BasicGolfball()
 	ball.set_velocity(args.velocity, np.radians(theta))
 	ball.set_spin([args.spinx, args.spiny, args.spin])
 
 	res = ball.solve(0, 100)
 	x, y, z = res.T
 
-	ax.plot(x, y, z, label=format(theta, ".1f") + " deg")
-	ax2.plot(x, y, label=format(theta, ".1f") + " deg")
+	#ax.plot(x, y, z, label=format(theta, ".1f") + " deg")
+	plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
-ax.set_xlabel("Distance (m)")
-ax.set_ylabel("Height (m)")
-ax.set_zlabel("Horizontal displacement (m)")
-ax.legend()
+	ball = DragGolfball()
+	ball.set_velocity(args.velocity, np.radians(theta))
+	ball.set_spin([args.spinx, args.spiny, args.spin])
 
-ax2.set_xlabel("Distance (m)")
-ax2.set_ylabel("Height (m)")
-ax2.legend()
+	res = ball.solve(0, 100)
+	x, y, z = res.T
 
+	# ax.plot(x, y, z, label=format(theta, ".1f") + " deg")
+	plot.plot(x, y, label=format(theta, ".1f") + " deg, w/ drag")
+
+#ax.set_xlabel("Distance (m)")
+#ax.set_ylabel("Height (m)")
+#ax.set_zlabel("Horizontal displacement (m)")
+#ax.legend()
+
+#ax2.set_xlabel("Distance (m)")
+#ax2.set_ylabel("Height (m)")
+#ax2.legend()
+
+plot.xlabel("Distance (m)")
+plot.ylabel("Height (m)")
+plot.legend()
+
+plot.grid(True)
 plot.show()
 
 
