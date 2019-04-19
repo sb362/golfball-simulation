@@ -91,7 +91,7 @@ def drag(density, area, cd, velocity):
 # F_l = 1/2 * air density * ref. area * coefficient * |v|^2 * (what x vhat)
 def lift(density, area, cl, velocity, rvelocity):
 	if norm(rvelocity) == 0:
-		return 0
+		return np.array([0, 0, 0])
 
 	S = 0.5 * density * area * cl
 
@@ -220,10 +220,12 @@ class LiftGolfball(DragGolfball):
 
 	# Returns coefficient of lift based on spin factor
 	def cl(self):
-		return 0.1 * self.spinf()
+		#return args.cl * self.spinf()
+		return 0.22
 
 	def acceleration(self):
-		fl = lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())
+		fl = np.array([0, lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())[1], 0])
+
 		return DragGolfball.acceleration(self) + fl / self.mass
 
 	# Spin decreases by about 1% every second
@@ -231,46 +233,41 @@ class LiftGolfball(DragGolfball):
 		return -0.01 * self.rvelocity()
 
 
-# Plot for a range of loft angles
-#fig = plot.figure(figsize=plot.figaspect(2))
-#fig = plot.figure()
-#ax = fig.add_subplot(2, 1, 2, projection="3d")
-#ax2 = fig.add_subplot(2, 1, 1)
-for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
-	ball = BasicGolfball()
-	ball.set_velocity(args.velocity, np.radians(theta))
-	ball.set_spin([args.spinx, args.spiny, args.spin])
+if __name__ == "__main__":
+	# Plot for a range of loft angles
+	plot.figure()
+	for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
+		ball = LiftGolfball()
+		ball.set_velocity(args.velocity, np.radians(theta))
+		ball.set_spin([args.spinx, args.spiny, args.spin])
 
-	res = ball.solve(0, 100)
-	x, y, z = res.T
+		res = ball.solve(0, 100)
+		x, y, z = res.T
 
-	#ax.plot(x, y, z, label=format(theta, ".1f") + " deg")
-	plot.plot(x, y, label=format(theta, ".1f") + " deg")
+		plot.plot(x, y, label=format(theta, ".1f") + " deg")
 
-	ball = DragGolfball()
-	ball.set_velocity(args.velocity, np.radians(theta))
-	ball.set_spin([args.spinx, args.spiny, args.spin])
+	plot.xlabel("Distance (m)")
+	plot.ylabel("Height (m)")
+	plot.grid(True)
+	plot.legend()
 
-	res = ball.solve(0, 100)
-	x, y, z = res.T
+	# Plot for a range of initial velocities at loft angle
+	plot.figure()
 
-	# ax.plot(x, y, z, label=format(theta, ".1f") + " deg")
-	plot.plot(x, y, label=format(theta, ".1f") + " deg, w/ drag")
+	for theta in np.arange(args.loftinitial, args.loftfinal, 1 if args.step > 1 else args.step):
+		ball = LiftGolfball()
+		ball.set_velocity(args.velocity, np.radians(theta))
+		ball.set_spin([args.spinx, args.spiny, args.spin])
 
-#ax.set_xlabel("Distance (m)")
-#ax.set_ylabel("Height (m)")
-#ax.set_zlabel("Horizontal displacement (m)")
-#ax.legend()
+		res = ball.solve(0, 100)
+		x, y, z = res.T
 
-#ax2.set_xlabel("Distance (m)")
-#ax2.set_ylabel("Height (m)")
-#ax2.legend()
+		plot.plot(theta, np.amax(x), 'ro')
 
-plot.xlabel("Distance (m)")
-plot.ylabel("Height (m)")
-plot.legend()
+	plot.xlabel("Loft angle (degrees)")
+	plot.ylabel("Carry distance (m)")
+	plot.grid(True)
 
-plot.grid(True)
-plot.show()
-
+	# Show plot
+	plot.show()
 
