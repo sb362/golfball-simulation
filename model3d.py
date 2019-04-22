@@ -180,8 +180,8 @@ class BasicGolfball:
 		self.set_coords(coords)
 
 		# Ensure golf ball doesn't dig through the Earth
-		if self.y < 0:
-			return np.zeros_like(coords)
+		#if self.y < 0:
+		#	return np.zeros_like(coords)
 
 		if args.verbose:
 			print(t, self.velocity(), self.rvelocity(), self.acceleration(), self.racceleration())
@@ -191,7 +191,10 @@ class BasicGolfball:
 	# Solve for trajectory over given interval
 	def solve(self, t0, t1, dt=0.01):
 		interval = np.linspace(t0, t1, (t1 - t0) / dt)
-		return integrate(self.__eqns, self.coords(), interval, tfirst=True)[:, :3]
+		res = integrate(self.__eqns, self.coords(), interval, tfirst=True)[:, :3]
+
+		out = np.array([e for e in res if e[1] >= 0])
+		return out
 
 # Simple golf ball but with drag
 class DragGolfball(BasicGolfball):
@@ -220,11 +223,12 @@ class LiftGolfball(DragGolfball):
 
 	# Returns coefficient of lift based on spin factor
 	def cl(self):
-		#return args.cl * self.spinf()
-		return 0.22
+		return 0.1 * self.spinf()
+		#return 0.22
 
 	def acceleration(self):
-		fl = np.array([0, lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())[1], 0])
+		#fl = np.array([0, lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())[1], 0])
+		fl = lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())
 
 		return DragGolfball.acceleration(self) + fl / self.mass
 
