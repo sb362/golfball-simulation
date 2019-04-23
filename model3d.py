@@ -92,17 +92,14 @@ def drag(density, area, cd, velocity):
 # Lift equation
 # F_l = 1/2 * air density * ref. area * coefficient * |v|^2 * (what x vhat)
 def lift(density, area, cl, velocity, rvelocity):
-	#if norm(rvelocity) == 0:
-	#	return np.array([0, 0, 0])
-
 	S = 0.5 * density * area * cl
 
-	# Cross product of angular velocity and linear velocity
-	#vxr = np.cross(rvelocity, velocity)
+	# Cross product of angular velocity and linear velocity, for direction of spin
+	rxv = np.cross(rvelocity, velocity)
+	rxv /= norm(rxv)
 
-	# vxr / norm(vxr) is a unit vector, magnitude of spin is considered in coefficient of lift
-	#return S * norm(velocity)**2 / norm(vxr) * vxr
-	return S * np.cross(rvelocity, velocity)
+	# Magnitude of spin is considered in coefficient of lift
+	return S * norm(velocity)**2 * rxv
 
 # Simple golfball, no drag, no lift, smooth
 class BasicGolfball:
@@ -216,13 +213,13 @@ class LiftGolfball(DragGolfball):
 	# Returns spin factor
 	def spinf(self):
 		v = norm(self.velocity())
-		w = norm(self.rvelocity())
+		w = self.radius * norm(self.rvelocity())
 		return w / v
 
 	# Returns coefficient of lift based on spin factor
 	def cl(self):
-		#return 0.1 * self.spinf()
-		return 0.2
+		s = self.spinf()
+		return -3.25 * s**2 + 1.99 * s
 
 	def acceleration(self):
 		fl = lift(density, self.area(), self.cl(), self.velocity(), self.rvelocity())
@@ -238,6 +235,7 @@ if __name__ == "__main__":
 	speeds = np.arange(50, 62, 2)
 	densities = np.arange(args.density - 0.2, args.density + 0.2, 0.1)
 
+	# TODO: reduce number of figures
 	fig1, speedax = plot.subplots()
 	plot.grid(True)
 	fig2, speedax2 = plot.subplots()
@@ -246,21 +244,26 @@ if __name__ == "__main__":
 	plot.grid(True)
 	fig4, densityax2 = plot.subplots()
 	plot.grid(True)
+	fig5, thetaax = plot.subplots()
+	plot.grid(True)
 
 	speedax.set_title("Ballistic trajectory of golf ball for several velocities; loft: 20 degrees")
 	speedax2.set_title("Carry distance against loft angle for several velocities")
 	densityax.set_title("Ballistic trajectory of golf ball for several air densities; loft: 20 degrees")
 	densityax2.set_title("Carry distance against loft angle for several air densities")
+	thetaax.set_title("Ballistic trajectory of golf ball for a range of loft angles")
 
 	speedax.set_xlabel("Distance (m)")
 	speedax2.set_xlabel("Loft angle (degrees)")
 	densityax.set_xlabel("Distance (m)")
 	densityax2.set_xlabel("Loft angle (degrees)")
+	thetaax.set_xlabel("Distance (m)")
 
 	speedax.set_ylabel("Height (m)")
 	speedax2.set_ylabel("Carry distance (m)")
 	densityax.set_ylabel("Height (m)")
 	densityax2.set_ylabel("Carry distance (m)")
+	thetaax.set_ylabel("Height (m)")
 
 	for speed in speeds:
 		ball = LiftGolfball()
@@ -314,9 +317,25 @@ if __name__ == "__main__":
 
 		densityax2.plot(xdata, ydata, 'o', label=format(density, ".3f") + " kg/m^3")
 
+	# Reset density to default value
+	density = args.density
+
+	for theta in np.arange(10, 40, 2):
+		ball = LiftGolfball()
+		ball.set_velocity(args.velocity, np.radians(theta))
+		ball.set_spin([args.spinx, args.spiny, args.spin])
+
+		res = ball.solve(0, 10)
+		x, y, z = res.T
+
+		thetaax.plot(x, y, label=format(theta, ".1f") + " degrees")
+
+
+
 	fig1.legend()
 	fig2.legend()
 	fig3.legend()
 	fig4.legend()
+	fig5.legend()
 
 	plot.show()
