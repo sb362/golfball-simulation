@@ -58,6 +58,8 @@ def re_to_cd(re):
 	# Clamp output value as it is only an approximation
 	if re > 120000:
 		return 0.370
+	elif re < 53000:
+		return 0.8
 
 	# Array of coefficients
 	coeffs = np.array([
@@ -78,9 +80,7 @@ def reynolds(velocity, radius):
 # Linear velocity to drag coefficient
 def sphere_cd(velocity, radius):
 	cd = re_to_cd(reynolds(velocity, radius))
-
-	# Clamp output value since the approximation isn't accurate for low velocities
-	return cd if velocity >= 18 else 0.8
+	return cd
 
 
 # Drag equation
@@ -92,6 +92,9 @@ def drag(density, area, cd, velocity):
 # Lift equation
 # F_l = 1/2 * air density * ref. area * coefficient * |v|^2 * (what x vhat)
 def lift(density, area, cl, velocity, rvelocity):
+	if cl == 0:
+		return np.array([0, 0, 0])
+
 	S = 0.5 * density * area * cl
 
 	# Cross product of angular velocity and linear velocity, for direction of spin
@@ -185,8 +188,8 @@ class BasicGolfball:
 
 	# Solve for trajectory over given interval
 	def solve(self, t0, t1, dt=0.01):
-		interval = np.linspace(t0, t1, (t1 - t0) / dt)
-		res = integrate(self.__eqns, self.coords(), interval, tfirst=True, printmessg=True)[:, :3]
+		interval = np.linspace(t0, t1, int((t1 - t0) / dt))
+		res = integrate(self.__eqns, self.coords(), interval, tfirst=True)[:, :3]
 
 		out = np.array([e for e in res if e[1] >= 0])
 		return out
@@ -246,24 +249,29 @@ if __name__ == "__main__":
 	plot.grid(True)
 	fig5, thetaax = plot.subplots()
 	plot.grid(True)
+	fig6, thetaax2 = plot.subplots()
+	plot.grid(True)
 
 	speedax.set_title("Ballistic trajectory of golf ball for several velocities; loft: 20 degrees")
 	speedax2.set_title("Carry distance against loft angle for several velocities")
 	densityax.set_title("Ballistic trajectory of golf ball for several air densities; loft: 20 degrees")
 	densityax2.set_title("Carry distance against loft angle for several air densities")
 	thetaax.set_title("Ballistic trajectory of golf ball for a range of loft angles")
+	thetaax2.set_title("Carry distance against loft angle")
 
 	speedax.set_xlabel("Distance (m)")
 	speedax2.set_xlabel("Loft angle (degrees)")
 	densityax.set_xlabel("Distance (m)")
 	densityax2.set_xlabel("Loft angle (degrees)")
 	thetaax.set_xlabel("Distance (m)")
+	thetaax2.set_xlabel("Loft angle (degrees)")
 
 	speedax.set_ylabel("Height (m)")
 	speedax2.set_ylabel("Carry distance (m)")
 	densityax.set_ylabel("Height (m)")
 	densityax2.set_ylabel("Carry distance (m)")
 	thetaax.set_ylabel("Height (m)")
+	thetaax.set_ylabel("Carry distance (m)")
 
 	for speed in speeds:
 		ball = LiftGolfball()
@@ -320,7 +328,7 @@ if __name__ == "__main__":
 	# Reset density to default value
 	density = args.density
 
-	for theta in np.arange(10, 40, 2):
+	for theta in np.arange(20, 45, 5):
 		ball = LiftGolfball()
 		ball.set_velocity(args.velocity, np.radians(theta))
 		ball.set_spin([args.spinx, args.spiny, args.spin])
@@ -330,7 +338,20 @@ if __name__ == "__main__":
 
 		thetaax.plot(x, y, label=format(theta, ".1f") + " degrees")
 
+	xdata = []
+	ydata = []
+	for theta in np.arange(20, 45, 0.5):
+		ball = LiftGolfball()
+		ball.set_velocity(args.velocity, np.radians(theta))
+		ball.set_spin([args.spinx, args.spiny, args.spin])
 
+		res = ball.solve(0, 10)
+		x, y, z = res.T
+
+		xdata.append(theta)
+		ydata.append(x[-1])
+
+	thetaax2.plot(xdata, ydata, 'ro')
 
 	fig1.legend()
 	fig2.legend()
