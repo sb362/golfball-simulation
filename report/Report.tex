@@ -56,76 +56,76 @@ The following assumptions are made throughout the report and model:
 \subsection{Flight}
 \subsubsection{Simple golf ball}
 A simple golf ball experiencing only weight may be modelled by the following system of differential equations;
-\begin{equation}
+\begin{equation} \label{simpleaccelx}
 a_x=\frac{\partial v_x}{\partial t}=0
 \end{equation}
-\begin{equation}
+\begin{equation} \label{simpleaccely}
 a_y=\frac{\partial v_y}{\partial t}=-g
 \end{equation}
 where $g$ is the gravitional field strength.
 
-Assuming the initial velocity is $v_0$ and the launch angle is $\theta$, the above equations can be solved to give:
-\begin{equation}
+Assuming the initial velocity is $v_0$ and the launch angle is $\theta$, equations (\ref{simpleaccelx}-\ref{simpleaccely}) can be solved to give equations (\ref{simplevelx}-\ref{simplevely}):
+\begin{equation} \label{simplevelx}
 v_x=v_0 \cos{\theta}
 \end{equation}
-\begin{equation}
+\begin{equation} \label{simplevely}
 v_y=v_0 \sin{\theta}-gt
 \end{equation}
-Integrating the above equations with respect to time gives the displacement as a function of time:
-\begin{equation}
+Integrating equations (\ref{simplevelx}-\ref{simplevely}) with respect to time yields the displacement as a function of time:
+\begin{equation} \label{simpleposx}
 x=v_0 t \cos{\theta}
 \end{equation}
-\begin{equation}
+\begin{equation} \label{simpleposy}
 y=v_0 t \sin{\theta}-\frac{1}{2} g t^2
 \end{equation}
 
-The maximum range is achieved when
-
 \begin{figure}[H]
 \centering
-\caption{Golf ball trajectory under no air resistance or lift}
-\includegraphics[scale=0.7]{simple}
+\caption{Golf ball trajectory, no drag or lift}
+\includegraphics[scale=0.6]{simple}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Range as a function of loft angle, no drag or lift}
-\includegraphics[scale=0.8]{simplerange}
+\includegraphics[scale=0.6]{simplerange}
 \end{figure}
 
-Figures (1) and (2) show the maximum range is when the loft angle at 45\degree, as predicted by the equations of projectile motion.
+Figures (1-2) show the maximum range is when the loft angle at 45\degree, as predicted by the equations of projectile motion.
+
+
 \pagebreak
 \subsubsection{Smooth golf ball experiencing drag}
-The drag equation is:
-\begin{equation}
-\vec{F_d} = \frac{1}{2} A C_d \rho_{air} |\vec{v}| \vec{v}
+The drag equation is given by:
+\begin{equation} \label{drageqn}
+\vec{F_{d}} = \frac{1}{2} A C_{d} \rho_{air} |\vec{v}| \vec{v}
 \end{equation}
-where $\rho_{air}$ is the density of air; $A$ is the reference area, which in the case of a smooth sphere of radius $r$, is the cross-sectional area $\pi r^2$; $C_d$ is the coefficient of drag, which is dependent on the Reynolds number; and $\vec{v}$ is the flow velocity relative to the golf ball.
+where $\rho_{air}$ is the density of air; $A$ is the reference area, which in the case of a smooth sphere of radius $r$, is the cross-sectional area $\pi r^2$; $C_d$ is the coefficient of drag, which is dependent on the Reynolds number; and $\vec{v}$ is the flow velocity relative to the golf ball. In this case, we assume the air is stationary and the golf ball is moving through the air with velocity $\vec{v}$.
 
-Applying equation (7) to equations (1)-(2), we get
-\begin{equation}
+Applying equation (\ref{drageqn}) to equations (\ref{simpleaccelx}-\ref{simpleaccely}), we get
+\begin{equation} \label{dragaccelx}
 \frac{\partial v_x}{\partial t}=-k |v_x| v_x
 \end{equation}
-\begin{equation}
+\begin{equation} \label{dragaccely}
 \frac{\partial v_y}{\partial t}=-g-k |v_y| v_y
 \end{equation}
-where $k=\frac{1}{2} A C_d \rho$.
+where $k=\frac{1}{2} A C_d \rho_{air}$.
 \begin{figure}[H]
 \centering
--\caption{Golf ball trajectory when experiencing drag but no lift, $C_d=0.5$}
-\includegraphics[scale=0.85]{dragapprox}
+\caption{Golf ball trajectory when experiencing drag but no lift, $C_d=0.5$}
+\includegraphics[scale=0.6]{dragapprox}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Range as a function of loft angle, $C_d$ = 0.5}
-\includegraphics[scale=0.9]{dragapproxrange}
+\includegraphics[scale=0.6]{dragapproxrange}
 \end{figure}
 
 Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of $50$ $m\cdot s^{-1}$. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about $114$ m versus the previous range of $255$ m at 45.0\degree.
 However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by:
-\begin{equation}
-Re=\frac{2vr}{\nu}
+\begin{equation} \label{reynolds}
+R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
@@ -134,21 +134,42 @@ Using data from [whereever we found the Reynolds number data], we used Python to
 \begin{figure}[H]
 \centering
 \caption{Coefficient of drag as a function of Reynolds number with curve of best fit}
-\includegraphics[scale=0.85]{reynolds}
+\includegraphics[scale=0.6]{reynolds}
 \end{figure}
 
-Applying the polynomial approxmation for the coefficient of drag and equation (10), the optimum loft angle decreases down to about 34.5\degree, shown in figures (6)-(7).
+Applying the approxmation for the coefficient of drag, the optimum loft angle decreases down to about 34.5\degree, shown in figures (6-7).
 \begin{figure}[H]
 \centering
 \caption{Trajectory of golf ball with drag considering Reynolds number, $v_i=50 m\cdot s^{-1}$}
-\includegraphics[scale=0.65]{dragwithreynolds}
+\includegraphics[scale=0.6]{dragwithreynolds}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Range against loft angle for golf ball with drag considering Reynolds number, $v_i=50 m\cdot s^{-1}$}
-\includegraphics[scale=0.7]{dragwithreynoldsrange}
+\includegraphics[scale=0.6]{dragwithreynoldsrange}
 \end{figure}
+
+
+
+
+\subsubsection{Smooth golf ball experiencing lift}
+Lift on a golf ball is caused by the Magnus effect, which is dependent on the backspin of the ball. The equation used is:
+
+\begin{equation} \label{lifteqn}
+F_{l} = \frac{1}{2} C_{l} \rho_{air} |v|^2 (\hat{\omega} \times \hat{v})
+\end{equation}
+
+where $C_L$ is dependent on the spin parameter of the ball:
+\begin{equation} \label{clifteqn}
+C_L = -3.25 S^2 + 1.99 S
+\end{equation}
+The spin parameter is given by
+\begin{equation} \label{spineqn}
+S = \frac{r|\omega|}{|v|}
+\end{equation}
+
+
 
 \end{document}
 \grid
