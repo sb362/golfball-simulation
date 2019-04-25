@@ -31,12 +31,40 @@
 
 \pagenumbering{arabic}
 
-\section{Abstract}
-...
-
-
 \section{Response}
-...
+The loft angle of the golf club which maximises the range of the golf ball trajectory is referred to as the optimum loft angle. This investigation consisted of two main parts: the impact of the club, and the flight of the golf ball. The golf ball considered is the Titleist Pro V1, with characteristics outlined under (2.1) Assumptions.
+
+\subsection{Impact}
+\subsubsection{Conservation of energy}
+The collision between the club head and golf ball is inelastic, meaning the kinetic energy of the system is not conserved throughout, but rather some of the energy is converted into different forms. One such form is elastic energy in the deformation of the golf ball. This has significant effect on the initial velocity of the golf ball, as the more the ball is deformed, the less kinetic energy the ball will have after the collision. The coefficient of restitution $e$ is the ratio of the final and initial velocities between the golf ball and club head after the collision.
+
+\subsubsection{Conservation of linear momentum}
+Before the club head strikes the ball, the momentum of the system is entirely linear.
+
+\subsubsection{Conservation of angular momentum}
+After the collision, angular momentum exists in the form of backspin, which has great effect on lift.
+
+\subsection{Flight}
+\subsubsection{Atmospheric conditions at different golf courses}
+\begin{table}[H]
+\caption{Atmospheric conditions at each golf course}
+\label{tab:aconditions}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Location                  & Temperature ($K$) & Humidity ($\%$) & Altitude ($m$) & Pressure ($kg/m^3$) \\ \hline
+Renaissance, East Lothian &                 &               &          & 1.13                               \\ \hline
+La Paz, Bolivia           &                 &               &          & 0.83                               \\ \hline
+Sentosa, Singapore        &                 &               &          & 1.15                               \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection{Backspin of golf ball}
+When the club head strikes the ball, the golf ball slides up the face of the club head. Friction between these two surfaces causes the ball to rotate and when the ball leaves the face of the club head it is in a pure rolling state\cite{Penner2001}.
+
+\subsubsection{Dimpling}
+The air flow around a smooth ball is layered and quickly separates from the ball and creates a large drag. The air flow around a golf ball with dimples creates a layer of turbulence and delays the separation of air from the ball, therefore creating less drag.
 
 \section{Theory and model}
 
@@ -48,12 +76,58 @@ The following assumptions are made throughout the report and model:
   \item[$\cdot$] gravitational field strength is constant (\SI{9.81}{\metre\per\second^{2}}) and does not flucuate with height;
   \item[$\cdot$] driver is roughly a flat plate and strikes the ball precisely at the center, with no draw or fade;
   \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be neglible;
-  \item[$\cdot$] the golf ball is a Titleist Pro V1, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}.
-
+  \item[$\cdot$] the golf ball is a Titleist Pro V1, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}, a moment of inertia of \SI{0.009145}{\gram\cdot\metre^2}, and 352 circular dimples.
 \end{description}
 
 \subsection{Impact}
-...
+The trajectory of the golf ball is directly influenced by two parameters which arise from the impact of the club head with the golf ball. These are:
+\begin{description}
+  \item[$\cdot$] backspin of the ball (angular velocity $\vec{\omega}$);
+  \item[$\cdot$] translational velocity of the ball (velocity $\vec{v}$).
+\end{description}
+These two parameters depend on loft angle and the initial velocity of the club. The laws of conservation of linear (\ref{linearmomentum1}-\ref{linearmomentum2}) and angular momentum were applied to the system and a coefficient of restitution used.
+\begin{equation} \label{linearmomentum1}
+M v_{cfn}+mv_{bfn}=Mv_{ci} \cos{\theta}
+\end{equation}
+\begin{equation} \label{linearmomentum2}
+M v_{cfp}+mv_{bfp}=-Mv_{ci} \sin{\theta}
+\end{equation}
+$v_{bfn}$ and $v_{bfb}$ can be expressed in terms of $v_{ci}$, the initial club speed, as equations (\ref{clubspeed1}-\ref{clubspeed2}).
+\begin{equation} \label{clubspeed1}
+v_{bfn}=(1+e)v_{ci} \frac{\cos{\theta}}{1+\frac{m}{M}}
+\end{equation}
+\begin{equation} \label{clubspeed2}
+v_{bfp}=-v_{ci} \frac{\sin{\theta}}{1+\frac{m}{M}+\frac{mr^2}{I}}
+\end{equation}
+These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations
+(\ref{initialvelocity}-\ref{launchanglephi})
+\begin{equation} \label{initialvelocity}
+v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
+\end{equation}
+\begin{equation} \label{launchanglephi}
+\phi_{bo}=\theta+\tan^{-1}{\frac{v_{bfp}}{v_{bfn}}}
+\end{equation}
+
+Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution}).
+\begin{equation} \label{restitution}
+e=0.86-0.0029 v_{impact} \cos{\theta}
+\end{equation}
+
+\begin{table}[H]
+\centering
+\caption{Something something table}
+\label{tab:spintable}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angle of departure ($\degree$) & Backspin ($rad s^{-1}$)  \\ \hline
+44.7               &                            &                    &           \\ \hline
+51.4               &                            &                    &           \\ \hline
+58.0               &                            &                    &           \\ \hline
+\end{tabular}%
+}
+\end{table}
+
 \pagebreak
 \subsection{Flight}
 \subsubsection{Simple golf ball}
@@ -73,7 +147,7 @@ v_x=v_0 \cos{\theta}
 \begin{equation} \label{simplevely}
 v_y=v_0 \sin{\theta}-gt
 \end{equation}
-Integrating equations (\ref{simplevelx}-\ref{simplevely}) with respect to time yields the displacement as a function of time:
+Integrating equations (\ref{simplevelx}-\ref{simplevely}) with respect to time yields the displacement as a function of time to give equations (\ref{simpleposx}-\ref{simpleposy}):
 \begin{equation} \label{simpleposx}
 x=v_0 t \cos{\theta}
 \end{equation}
@@ -96,7 +170,7 @@ y=v_0 t \sin{\theta}-\frac{1}{2} g t^2
 Figures (1-2) show the maximum range is when the loft angle at 45.0\degree, as predicted by the equations of projectile motion.
 
 \subsubsection{Smooth golf ball experiencing drag}
-The drag equation is given by:
+The drag equation (\ref{drageqn})
 \begin{equation} \label{drageqn}
 \vec{F_{d}} = \frac{1}{2} A C_{d} \rho_{air} |\vec{v}| \vec{v}
 \end{equation}
@@ -109,7 +183,7 @@ Applying equation (\ref{drageqn}) to equations (\ref{simpleaccelx}-\ref{simpleac
 \begin{equation} \label{dragaccely}
 \frac{\partial v_y}{\partial t}=-g-k |v_y| v_y
 \end{equation}
-where $k=\frac{1}{2} A C_d \rho_{air}$.
+where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a closed-form solution and require numerical methods.
 \begin{figure}[H]
 \centering
 \caption{Golf ball trajectory when experiencing drag but no lift, $C_d=0.5$}
@@ -129,7 +203,9 @@ R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
-Using data from [whereever we found the Reynolds number data], we used Python to construct a quartic fit as shown in Figure (5). One of the limitions of this approach is that we did not have any data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation would not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at those points. To get around this, the coefficient of drag is fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
+Using data from [whereever we found the Reynolds number data], we used Python to construct a quartic fit as shown in Figure (5).\\
+A quartic approximation is best as any greater degree would begin to oscillate too much at the edges (Runge's phenomenon). Likewise, a lesser degree would be too linear to give any meaningful relation.\\
+One of the limitions of this approach is that we did not have any data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation would not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To get around this, the coefficient of drag is fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
 
 \begin{figure}[H]
 \centering
@@ -168,5 +244,11 @@ S = \frac{r|\omega|}{|v|}
 \end{equation}
 
 
+\bibliography{bibliography}{}
+\bibliographystyle{plain}
+
+
 \end{document}
+
+
 \grid
