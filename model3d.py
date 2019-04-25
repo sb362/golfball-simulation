@@ -236,7 +236,7 @@ class LiftGolfball(DragGolfball):
 if __name__ == "__main__":
 	# Initial conditions
 	speeds = np.arange(50, 62, 2)
-	densities = np.arange(args.density - 0.2, args.density + 0.2, 0.1)
+	densities = [1.128, 0.861, 1.154]
 
 	# TODO: reduce number of figures
 	fig1, speedax = plot.subplots()
@@ -286,7 +286,7 @@ if __name__ == "__main__":
 	for speed in speeds:
 		xdata = []
 		ydata = []
-		for theta in np.arange(12, 40, 1):
+		for theta in np.arange(12, 40, 0.5):
 			ball = LiftGolfball()
 			ball.set_velocity(speed, np.radians(theta))
 			ball.set_spin([args.spinx, args.spiny, args.spin])
