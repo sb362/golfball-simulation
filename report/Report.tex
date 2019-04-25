@@ -128,7 +128,58 @@ Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angl
 }
 \end{table}
 
-\pagebreak
+\subsection{Flight conditions}
+The main atmospheric factor which affects the golf ball’s flight is air density which is dependent on pressure, temperature and humidity of the air molecules. When the air density increases there will be more resistance against the ball during its flight, thus the maximum carry distance will be less. As the temperature of the air increases, the air molecules have greater kinetic energy, space out more and as thus occupy a larger volume, resulting in a decrease in air density. When the air pressure is increased, air density also increases as there are more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.\\
+
+When this relative humidity increases then since humid air is lighter than dry air due to the moist air having more vapour and less Nitrogen and Oxygen, which have a greater molar mass, then the air density of humid air will be less than for dry air. Therefore, the greater the humidity, the lower the air density. Relative humidity is given by equation (\ref{pressures}):
+\begin{equation} \label{pressures}
+\phi = \frac{P_w}{P_{w}^\prime} \times 100
+\end{equation}
+where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibrium vapour pressure, that is the maximum pressure it could be in that given temperature value. This value of $P_{w}^\prime$ can be obtained by Antoine's equation (\ref{antoine}):
+\begin{equation} \label{antoine}
+P_{w}^\prime = e^{\frac{A-B}{C+T}}
+\end{equation}
+where $T$ is the temperature in K and $A$, $B$, and $C$ are are component specific constants for the given medium. Through the use of Dalton's law for partial pressures, the molar fraction of elements which compose the atmosphere can be readily calculated using equation (\ref{daltons}):
+\begin{equation} \label{daltons}
+x_w = \frac{P_w}{P_T}
+\end{equation}
+where $x_w$ is the molar fraction of water vapour and $n_T$ is the total number of moles which is obtained using the ideal gas law (\ref{idealgaslaw}):
+\begin{equation} \label{idealgaslaw}
+P_T V = n_T R T
+\end{equation}
+where $P_T$ is the total pressure, which is found using the barometric formula (\ref{barometric}):
+\begin{equation} \label{barometric}
+P_T = P_0 e^{\frac{-Mg}{R T_0} h}
+\end{equation}
+where $P_0$ and $T_0$ are, respectively, pressure and temperature at sea level (\SI{103125}{\pascal}, \SI{288.15}{\kelvin}), $g$ is the gravitational field strength, L is the teemperature lapse rate (\SI{0.0065}{\kelvin\per\metre}). At higher altitudes, the air molecules can spread out further resulting in a decrease in air density.\\
+The molar fraction of water vapour can be obtained through equation (\ref{molar})
+\begin{equation} \label{molar}
+x_w = \frac{n_w}{n_T}
+\end{equation}
+From here, it was a case of getting the number of moles for each major component of the atmosphere - nitrogen, oxygen, argon, and water vapour - using equation (\ref{components}):
+\begin{equation} \label{components}
+n_T - n_w = n_O + n_N + n_{Ar}
+\end{equation}
+and considering the fraction of each component of air:
+\begin{equation}
+n_N = 0.7808(n_T - n_w)
+\end{equation}
+\begin{equation}
+n_O = 0.20195(n_T - n_w)
+\end{equation}
+\begin{equation}
+n_{Ar} = 0.0093(n_T - n_w)
+\end{equation}
+By the consideration of the molar masses, the density of air can be calculated by equation (\ref{airdensity}):
+\begin{equation} \label{airdensity}
+\rho = \frac{((M_N P_{N}) + (M_O P_{O}) + (M_{Ar} P_{Ar}))}{RT}
+\end{equation}
+where $P$ is the partial pressure of an element, found by equation (\ref{ppressures}):
+\begin{equation} \label{ppressures}
+P = \frac{n_x RT}{V}
+\end{equation}
+where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions.
+
 \subsection{Flight}
 \subsubsection{Simple golf ball}
 A simple golf ball experiencing only weight may be modelled by the following system of differential equations;
