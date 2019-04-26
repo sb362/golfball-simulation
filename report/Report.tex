@@ -52,6 +52,15 @@ Sentosa, Singapore        & 307              &  75        & 33      & 1.154     
 \end{table}
 
 The tournament in Singapore took place in January 17th-20th 2019.The tournament in East Lothian is scheduled to take place in July, 8th-14th (2019) and the Bolivian tournament is scheduled for August (2019). The values for temperature and humidity are average values for the given time of year.
+The clubhead speed is taken to be 51.4\SI{50}{\metre\per\second} (see 2.1 Assumptions)
+
+The following graph shows how the air density at different locations effects the maximum carry distance for a given loft angle. 
+\begin{figure}[H]
+\centering
+\caption{Effect of air density on maximum carry distance, $\omega_{spin}=$ \SI{300}{\radian\per\second}, $v_i =$ \SI{50}{\metre\per\second}}
+\includegraphics[scale=0.6]{effectofairdensity2}
+\end{figure}
+
 
 \subsection{Results}
 The following graphs are for the conditions at Renasissance, East Lothian.
@@ -59,67 +68,48 @@ The following graphs are for the conditions at Renasissance, East Lothian.
 \begin{figure}[H]
 \centering
 \caption{Effect of loft angle on carry distance}
-\includegraphics[scale=0.6]{results1.128}
+\includegraphics[scale=0.6]{results1128}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Loft angle vs carry distance to obtain optimum loft angle}
-\includegraphics[scale=0.6]{results1.128range}
+\includegraphics[scale=0.6]{results1128range}
 \end{figure}
 
-From the investigation, the recommended loft angle to maximise the carry distance based on a club speed of 51.4 $ms^-1$  for the Scottish Open at the Renaissance Club in East Lothian is ....  which produces a flight distance of …....  
+From the investigation, the recommended loft angle to maximise the carry distance for the Scottish Open at the Renaissance Club in East Lothian is 13.4 degrees which produces a flight distance of 186.02$m$
 
 The following graphs are for the conditions at La Paz, Bolivia.
 
 \begin{figure}[H]
 \centering
 \caption{Effect of loft angle on carry distance}
-\includegraphics[scale=0.6]{results0.861}
+\includegraphics[scale=0.6]{results0861}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Loft angle vs carry distance to obtain optimum loft angle}
-\includegraphics[scale=0.6]{results0.861range}
+\includegraphics[scale=0.6]{results0861range}
 \end{figure}
 
-The recommended loft angle to maximise the flight distance based on a club speed of …...  for the La Paz golf club in Bolivia is........ which produces a carry distance of …....  
- 
- The following graphs are for the conditions at Sentosa, Singapore.
+The recommended loft angle to maximise the flight distance for the La Paz golf club in Bolivia is 16.2 degrees which produces a carry distance of 217.99$m$
+
+The following graphs are for the conditions at Sentosa, Singapore.
 
 \begin{figure}[H]
 \centering
 \caption{Effect of loft angle on carry distance}
-\includegraphics[scale=0.6]{results1.154}
+\includegraphics[scale=0.6]{results1154}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \caption{Loft angle vs carry distance to obtain optimum loft angle}
-\includegraphics[scale=0.6]{results1.154range}
+\includegraphics[scale=0.6]{results1154range}
 \end{figure}
 
-The recommended loft angle to maximise the flight distance based on a club speed of …...  for the Sentosa, is........ which produces a carry distance of …....  
- 
-
-
-
-
-
-
-\begin{figure}[H]
-\centering
-\caption{Effect of club speed on carry distance and optimum loft angle, $\omega_{spin}=$ \SI{300}{\radian\per\second}, $v_i =$ \SI{50}{\metre\per\second}}
-\includegraphics[scale=0.6]{effectofairdensity2}
-\end{figure}
-
-
-
-
-
-
-
+The recommended loft angle to maximise the flight distance for the Sentosa, is 13.2 degrees which produces a carry distance of 183.23$m$
 
 \section{Theory}
 
@@ -131,6 +121,7 @@ The following assumptions are made throughout the report and model:
   \item[$\cdot$] gravitational field strength is constant (\SI{9.81}{\metre\per\second^{2}}) and does not flucuate with height;
   \item[$\cdot$] driver is roughly a flat plate and strikes the ball precisely at the center, with no draw or fade;
   \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be neglible;
+  \item[$\cdot$] the golf ball is struck by a club which has the average velocity for a professional golfer (51.4\SI{50}{\metre\per\second});
   \item[$\cdot$] the golf ball is a Titleist Pro V1x, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}, a moment of inertia of \SI{0.009145}{\gram\cdot\metre^2}, and 352 circular dimples.
 \end{description}
 
@@ -167,8 +158,30 @@ Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ f
 e=0.86-0.0029 v_{impact} \cos{\theta}
 \end{equation}
 
+It can be seen from the equations that the ball's initial velocity depends on the loft angle of the club.
 
-ADD GRAPHS LOFTANGLEANDSPIN
+\begin{figure}[H]
+\centering
+\caption{Effect of loft angle on ball velocity}
+\includegraphics[scale=0.6]{loftangleandballvelocity}
+\end{figure}
+
+Also, the angular velocity of the ball changes with loft angle.
+
+\begin{figure}[H]
+\centering
+\caption{Effect of loft angle on ball's angular velocity}
+\includegraphics[scale=0.6]{loftangleandspin}
+\end{figure}
+
+The loft angle of the club also varies with loft angle.
+
+\begin{figure}[H]
+\centering
+\caption{Effect of loft angle on launch angle}
+\includegraphics[scale=0.6]{loftangleloftangle}
+\end{figure}
+
 
 \subsection{Flight conditions}
 The main atmospheric factor affecting the golf ball’s flight is air density which is dependent on air pressure, temperature and humidity. When air density increases, there is increased resistance against the ball during its flight, thus the maximum carry distance is less. Air molecules have greater kinetic energy as the temperature of the air increases, causing them to occupy a larger volume. This results in a decrease in air density. When the air pressure is increased, air density also increases as more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.  The air density of humid air is less than dry air. Relative humidity is given by equation (\ref{pressures}):
@@ -287,7 +300,10 @@ where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a cl
 \end{figure}
 
 Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
-However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
+
+/textbr{Dimpled ball experiencing drag}
+The dimpled surface of the golf ball creates the boundary layer which is a thin turbulent layer of air which exists above and below the ball as it travels through the air. The ball leaves behind a turbulent air pocket causing the air pressure behind the ball to be lower than at the front, which reduces drag.
+The drag coefficient is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
 \begin{equation} \label{reynolds}
 R=\frac{2vr}{\nu}
 \end{equation}
@@ -318,8 +334,9 @@ Applying the approxmation for the coefficient of drag, the optimum loft angle de
 \end{figure}
 
 
-\subsubsection{Smooth golf ball experiencing lift}
-Lift on a golf ball is caused by the Magnus effect, which is dependent on the backspin of the ball. The equation is similar to the drag equation, however the direction of the force is perpendicular to both angular velocity and translational velocity.
+\subsubsection{Dimpled ball experiencing lift}
+A spinning ball creates lift due to the interaction of the surface of the ball with the airflow around it. The underside of the ball rotates into the air and slows the airflow down causing a high-pressure area. The upper side rotates with the direction of airflow, increasing the speed and causing an area of low pressure. The Magnus-Robin effect is also considered as the airflow is deflected downwards which carries momentum in the downwards direction, yielding an equal and opposite force on the ball upwards based on the change in momentum over time. 
+The lift equation is similar to the drag equation, however the direction of the force is perpendicular to both angular velocity and translational velocity.
 
 \begin{equation} \label{lifteqn}
 F_l = \frac{1}{2} \rho_{air} C_{l} |v|^2 (\hat{\omega} \times \hat{v})
