@@ -73,10 +73,23 @@ The tournament in Singapore took place in January 17th-20th 2019.The tournament 
 
 \section{Theory}
 
+\subsection{Assumptions}
+The following assumptions are made throughout the report and model:
+\begin{description}
+  \item[$\cdot$] golf course is level and has no effect on trajectory;
+  \item[$\cdot$] height of the tee is negligible;
+  \item[$\cdot$] gravitational field strength is constant (\SI{9.81}{\metre\per\second^{2}}) and does not flucuate with height;
+  \item[$\cdot$] driver is roughly a flat plate and strikes the ball precisely at the center, with no draw or fade;
+  \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be neglible;
+  \item[$\cdot$] the golf ball is a Titleist Pro V1x, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}, a moment of inertia of \SI{0.009145}{\gram\cdot\metre^2}, and 352 circular dimples.
+\end{description}
+
 \subsection{Impact}
 \subsubsection{Conservation of energy}
 The collision between the club head and golf ball is inelastic, meaning the kinetic energy of the system is not conserved, but rather some of the energy is converted into different forms. One such form is elastic energy in the deformation of the golf ball. This has significant effect on the initial velocity of the golf ball, as the more the ball is deformed, the less kinetic energy the ball will have after the collision. The coefficient of restitution $e$ is the ratio of the final and initial velocities between the golf ball and club head after the collision and it is introduced in calculations. Further energy is lost as heat and sound.
 
+\subsubsection{Conservation of momentum}
+The law of conservation of momentum was applied and the velocities were resolved into components.
 \begin{equation} \label{linearmomentum1}
 M v_{cfn}+mv_{bfn}=Mv_{ci} \cos{\theta}
 \end{equation}
@@ -104,20 +117,6 @@ Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ f
 e=0.86-0.0029 v_{impact} \cos{\theta}
 \end{equation}
 
-\begin{table}[H]
-\centering
-\caption{Something something table}
-\label{tab:spintable}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|l|l|l|l|}
-\hline
-Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angle of departure ($\degree$) & Backspin ($rad s^{-1}$)  \\ \hline
-44.7               &                            &                    &           \\ \hline
-51.4               &                            &                    &           \\ \hline
-58.0               &                            &                    &           \\ \hline
-\end{tabular}%
-}
-\end{table}
 
 \subsection{Flight}
 
@@ -127,26 +126,6 @@ When the club head strikes the ball, the golf ball slides up the face of the clu
 \subsubsection{Dimpling}
 The air flow around a smooth ball is layered and quickly separates from the ball and creates a large drag. The air flow around a golf ball with dimples creates a layer of turbulence and delays the separation of air from the ball, therefore creating less drag.
 \section{Theory and model}
-
-\subsection{Assumptions}
-The following assumptions are made throughout the report and model:
-\begin{description}
-  \item[$\cdot$] golf course is level and has no effect on trajectory;
-  \item[$\cdot$] height of the tee is negligible;
-  \item[$\cdot$] gravitational field strength is constant (\SI{9.81}{\metre\per\second^{2}}) and does not flucuate with height;
-  \item[$\cdot$] driver is roughly a flat plate and strikes the ball precisely at the center, with no draw or fade;
-  \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be neglible;
-  \item[$\cdot$] the golf ball is a Titleist Pro V1x, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}, a moment of inertia of \SI{0.009145}{\gram\cdot\metre^2}, and 352 circular dimples.
-\end{description}
-
-\subsection{Impact}
-The trajectory of the golf ball is directly influenced by two parameters which arise from the impact of the club head with the golf ball. These are:
-\begin{description}
-  \item[$\cdot$] backspin of the ball (angular velocity $\vec{\omega}$);
-  \item[$\cdot$] translational velocity of the ball (velocity $\vec{v}$).
-\end{description}
-These two parameters depend on loft angle and the initial velocity of the club. The laws of conservation of linear (\ref{linearmomentum1}-\ref{linearmomentum2}) and angular momentum were applied to the system and a coefficient of restitution used.
-
 
 \begin{table}[H]
 \centering
