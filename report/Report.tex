@@ -81,7 +81,7 @@ Sentosa, Singapore        &                 &               &          & 1.15   
 \end{table}
 
 \subsubsection{Backspin of golf ball}
-When the club head strikes the ball, the golf ball slides up the face of the club head. Friction between these two surfaces causes the ball to rotate and when the ball leaves the face of the club head it is in a pure rolling state\cite{Penner2001}.
+When the club head strikes the ball, the golf ball slides up the face of the club head. Friction between these two surfaces causes the ball to rotate and when the ball leaves the face of the club head it is in a pure rolling state \cite{Penner2001}.
 
 \subsubsection{Dimpling}
 The air flow around a smooth ball is layered and quickly separates from the ball and creates a large drag. The air flow around a golf ball with dimples creates a layer of turbulence and delays the separation of air from the ball, therefore creating less drag.
@@ -121,7 +121,7 @@ v_{bfn}=(1+e)v_{ci} \frac{\cos{\theta}}{1+\frac{m}{M}}
 \begin{equation} \label{clubspeed2}
 v_{bfp}=-v_{ci} \frac{\sin{\theta}}{1+\frac{m}{M}+\frac{mr^2}{I}}
 \end{equation}
-These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations (\ref{initialvelocity}-\ref{launchanglephi})\cite{Penner2001}
+These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations (\ref{initialvelocity}-\ref{launchanglephi}) \cite{Penner2001}
 \begin{equation} \label{initialvelocity}
 v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
 \end{equation}
@@ -129,7 +129,7 @@ v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
 \phi_{bo}=\theta+\tan^{-1}{\frac{v_{bfp}}{v_{bfn}}}
 \end{equation}
 
-Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution})\cite{Penner2001}.
+Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution}) \cite{Penner2001}.
 \begin{equation} \label{restitution}
 e=0.86-0.0029 v_{impact} \cos{\theta}
 \end{equation}
@@ -152,7 +152,7 @@ Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angl
 \subsection{Flight conditions}
 The main atmospheric factor which affects the golf ball’s flight is air density which is dependent on pressure, temperature and humidity of the air molecules. When the air density increases there will be more resistance against the ball during its flight, thus the maximum carry distance will be less. As the temperature of the air increases, the air molecules have greater kinetic energy, space out more and as thus occupy a larger volume, resulting in a decrease in air density. When the air pressure is increased, air density also increases as there are more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.\\
 
-When this relative humidity increases then since humid air is lighter than dry air due to the moist air having more vapour and less Nitrogen and Oxygen, which have a greater molar mass, then the air density of humid air will be less than for dry air. Therefore, the greater the humidity, the lower the air density. Relative humidity is given by equation (\ref{pressures}):
+When this relative humidity increases then since humid air is lighter than dry air due to the moist air having more vapour and less nitrogen and oxygen, which have a greater molar mass, then the air density of humid air will be less than for dry air. Therefore, the greater the humidity, the lower the air density. Relative humidity is given by equation (\ref{pressures}):
 \begin{equation} \label{pressures}
 \phi = \frac{P_w}{P_{w}^\prime} \times 100
 \end{equation}
@@ -269,7 +269,7 @@ where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a cl
 \end{figure}
 
 Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
-However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
+However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds}) \cite{Alam2011}:
 \begin{equation} \label{reynolds}
 R=\frac{2vr}{\nu}
 \end{equation}
@@ -331,7 +331,7 @@ S = \frac{r|\omega|}{|v|}
   showstringspaces=false
 }
 
-\textit{The model was written using Python version 3.8, on a Linux machine, although earlier versions (i.e. 3.5) should work. It requires the following Python packages: NumPy, SciPy, and Matplotlib. Use ./model3d.py -h for a list of parameters. It also supports 3d plots, though these are experimental. The source code is also hosted as a git repository at \url{https://github.com/s-ballantyne/gdp}.}
+\textit{The model was written using Python version 3.8, on a Linux machine, although earlier versions (i.e. 3.5) should work. It requires the following Python packages: NumPy, SciPy, and Matplotlib. Use ./model3d.py -h for a list of parameters. It also supports 3d plots, though these are experimental. The source code is also hosted as a git repository at \url{https://github.com/s-ballantyne/gdp}. Note: occasionally you may see some artefacts (straight lines along y=0, or out-of-place points on a carry distance against theta plot). I believe this is due to stiffness switching in the underlying implementation of odeint. Should have no effect on other results and seems to only happen when there is backspin}.
 \begin{lstlisting}[language=Python, caption=Python model), style=PythonStyle, basicstyle=\tiny]
 #!/usr/bin/env python3
 
