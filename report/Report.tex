@@ -36,6 +36,21 @@
 \section{Response}
 The loft angle of the golf club which maximises the range of the golf ball trajectory is referred to as the optimum loft angle. This investigation consisted of two main parts: the impact of the club, and the flight of the golf ball. The golf ball considered is the Titleist Pro V1x, with characteristics outlined under (2.1) Assumptions.
 
+\subsubsection{Atmospheric conditions at different golf courses}
+\begin{table}[H]
+\caption{Atmospheric conditions at each golf course}
+\label{tab:aconditions}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Location                  & Temperature ($K$) & Humidity ($\%$) & Altitude ($m$) & Pressure ($kg/m^3$)		\\ \hline
+Renaissance, East Lothian &                 &               &          & 1.13                               \\ \hline
+La Paz, Bolivia           &                 &               &          & 0.83                               \\ \hline
+Sentosa, Singapore        &                 &               &          & 1.15                               \\ \hline
+\end{tabular}%
+}
+\end{table}
+
 \begin{figure}[H]
 \centering
 \caption{Effect of club speed on carry distance and optimum loft angle, $\omega_{spin}=$ \SI{300}{\radian\per\second}}
@@ -54,38 +69,61 @@ The loft angle of the golf club which maximises the range of the golf ball traje
 \includegraphics[scale=0.6]{effectofairdensity2}
 \end{figure}
 
+\section{Theory}
+
 \subsection{Impact}
 \subsubsection{Conservation of energy}
-The collision between the club head and golf ball is inelastic, meaning the kinetic energy of the system is not conserved throughout, but rather some of the energy is converted into different forms. One such form is elastic energy in the deformation of the golf ball. This has significant effect on the initial velocity of the golf ball, as the more the ball is deformed, the less kinetic energy the ball will have after the collision. The coefficient of restitution $e$ is the ratio of the final and initial velocities between the golf ball and club head after the collision.
+The collision between the club head and golf ball is inelastic, meaning the kinetic energy of the system is not conserved, but rather some of the energy is converted into different forms. One such form is elastic energy in the deformation of the golf ball. This has significant effect on the initial velocity of the golf ball, as the more the ball is deformed, the less kinetic energy the ball will have after the collision. The coefficient of restitution $e$ is the ratio of the final and initial velocities between the golf ball and club head after the collision and it is introduced in calculations. Further energy is lost as heat and sound.
 
-\subsubsection{Conservation of linear momentum}
-Before the club head strikes the ball, the momentum of the system is entirely linear.
+\begin{equation} \label{linearmomentum1}
+M v_{cfn}+mv_{bfn}=Mv_{ci} \cos{\theta}
+\end{equation}
+\begin{equation} \label{linearmomentum2}
+M v_{cfp}+mv_{bfp}=-Mv_{ci} \sin{\theta}
+\end{equation}
+$v_{bfn}$ and $v_{bfb}$ can be expressed in terms of $v_{ci}$, the initial club speed, as equations (\ref{clubspeed1}-\ref{clubspeed2}).
 
-\subsubsection{Conservation of angular momentum}
-After the collision, angular momentum exists in the form of backspin, which has great effect on lift.
+\begin{equation} \label{clubspeed1}
+v_{bfn}=(1+e)v_{ci} \frac{\cos{\theta}}{1+\frac{m}{M}}
+\end{equation}
+\begin{equation} \label{clubspeed2}
+v_{bfp}=-v_{ci} \frac{\sin{\theta}}{1+\frac{m}{M}+\frac{mr^2}{I}}
+\end{equation}
+These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations (\ref{initialvelocity}-\ref{launchanglephi})\cite{Penner2001}
+\begin{equation} \label{initialvelocity}
+v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
+\end{equation}
+\begin{equation} \label{launchanglephi}
+\phi_{bo}=\theta+\tan^{-1}{\frac{v_{bfp}}{v_{bfn}}}
+\end{equation}
 
-\subsection{Flight}
-\subsubsection{Atmospheric conditions at different golf courses}
+Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution})\cite{Penner2001}.
+\begin{equation} \label{restitution}
+e=0.86-0.0029 v_{impact} \cos{\theta}
+\end{equation}
+
 \begin{table}[H]
-\caption{Atmospheric conditions at each golf course}
-\label{tab:aconditions}
+\centering
+\caption{Something something table}
+\label{tab:spintable}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-Location                  & Temperature ($K$) & Humidity ($\%$) & Altitude ($m$) & Pressure ($kg/m^3$)		\\ \hline
-Renaissance, East Lothian &                 &               &          & 1.13                               \\ \hline
-La Paz, Bolivia           &                 &               &          & 0.83                               \\ \hline
-Sentosa, Singapore        &                 &               &          & 1.15                               \\ \hline
+Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angle of departure ($\degree$) & Backspin ($rad s^{-1}$)  \\ \hline
+44.7               &                            &                    &           \\ \hline
+51.4               &                            &                    &           \\ \hline
+58.0               &                            &                    &           \\ \hline
 \end{tabular}%
 }
 \end{table}
+
+\subsection{Flight}
 
 \subsubsection{Backspin of golf ball}
 When the club head strikes the ball, the golf ball slides up the face of the club head. Friction between these two surfaces causes the ball to rotate and when the ball leaves the face of the club head it is in a pure rolling state \cite{Penner2001}.
 
 \subsubsection{Dimpling}
 The air flow around a smooth ball is layered and quickly separates from the ball and creates a large drag. The air flow around a golf ball with dimples creates a layer of turbulence and delays the separation of air from the ball, therefore creating less drag.
-
 \section{Theory and model}
 
 \subsection{Assumptions}
@@ -107,32 +145,6 @@ The trajectory of the golf ball is directly influenced by two parameters which a
 \end{description}
 These two parameters depend on loft angle and the initial velocity of the club. The laws of conservation of linear (\ref{linearmomentum1}-\ref{linearmomentum2}) and angular momentum were applied to the system and a coefficient of restitution used.
 
-\begin{equation} \label{linearmomentum1}
-M v_{cfn}+mv_{bfn}=Mv_{ci} \cos{\theta}
-\end{equation}
-\begin{equation} \label{linearmomentum2}
-M v_{cfp}+mv_{bfp}=-Mv_{ci} \sin{\theta}
-\end{equation}
-$v_{bfn}$ and $v_{bfb}$ can be expressed in terms of $v_{ci}$, the initial club speed, as equations (\ref{clubspeed1}-\ref{clubspeed2}).
-
-\begin{equation} \label{clubspeed1}
-v_{bfn}=(1+e)v_{ci} \frac{\cos{\theta}}{1+\frac{m}{M}}
-\end{equation}
-\begin{equation} \label{clubspeed2}
-v_{bfp}=-v_{ci} \frac{\sin{\theta}}{1+\frac{m}{M}+\frac{mr^2}{I}}
-\end{equation}
-These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations (\ref{initialvelocity}-\ref{launchanglephi}) \cite{Penner2001}
-\begin{equation} \label{initialvelocity}
-v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
-\end{equation}
-\begin{equation} \label{launchanglephi}
-\phi_{bo}=\theta+\tan^{-1}{\frac{v_{bfp}}{v_{bfn}}}
-\end{equation}
-
-Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution}) \cite{Penner2001}.
-\begin{equation} \label{restitution}
-e=0.86-0.0029 v_{impact} \cos{\theta}
-\end{equation}
 
 \begin{table}[H]
 \centering
@@ -150,9 +162,7 @@ Initial club speed ($m s^{-1}$) & Ball velocity on departure ($m s^{-1}$) & Angl
 \end{table}
 
 \subsection{Flight conditions}
-The main atmospheric factor which affects the golf ball’s flight is air density which is dependent on pressure, temperature and humidity of the air molecules. When the air density increases there will be more resistance against the ball during its flight, thus the maximum carry distance will be less. As the temperature of the air increases, the air molecules have greater kinetic energy, space out more and as thus occupy a larger volume, resulting in a decrease in air density. When the air pressure is increased, air density also increases as there are more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.\\
-
-When this relative humidity increases then since humid air is lighter than dry air due to the moist air having more vapour and less nitrogen and oxygen, which have a greater molar mass, then the air density of humid air will be less than for dry air. Therefore, the greater the humidity, the lower the air density. Relative humidity is given by equation (\ref{pressures}):
+The main atmospheric factor affecting the golf ball’s flight is air density which is dependent on air pressure, temperature and humidity. When air density increases, there is increased resistance against the ball during its flight, thus the maximum carry distance is less. Air molecules have greater kinetic energy as the temperature of the air increases, causing them to occupy a larger volume. This results in a decrease in air density. When the air pressure is increased, air density also increases as more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.  The air density of humid air is less than dry air. Relative humidity is given by equation (\ref{pressures}):
 \begin{equation} \label{pressures}
 \phi = \frac{P_w}{P_{w}^\prime} \times 100
 \end{equation}
@@ -160,7 +170,7 @@ where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibri
 \begin{equation} \label{antoine}
 P_{w}^\prime = e^{\frac{A-B}{C+T}}
 \end{equation}
-where $T$ is the temperature in K and $A$, $B$, and $C$ are are component specific constants for the given medium. Through the use of Dalton's law for partial pressures, the molar fraction of elements which compose the atmosphere can be readily calculated using equation (\ref{daltons}):
+where $T$ is the temperature in K and $A$, $B$, and $C$ are are component specific constants for the given medium. Through the use of Dalton's law for partial pressures, the molar fraction of elements which compose the atmosphere can be calculated using equation (\ref{daltons}):
 \begin{equation} \label{daltons}
 x_w = \frac{P_w}{P_T}
 \end{equation}
@@ -172,12 +182,12 @@ where $P_T$ is the total pressure, which is found using the barometric formula (
 \begin{equation} \label{barometric}
 P_T = P_0 e^{\frac{-Mg}{R T_0} h}
 \end{equation}
-where $P_0$ and $T_0$ are, respectively, pressure and temperature at sea level (\SI{103125}{\pascal}, \SI{288.15}{\kelvin}), $g$ is the gravitational field strength, L is the teemperature lapse rate (\SI{0.0065}{\kelvin\per\metre}). At higher altitudes, the air molecules can spread out further resulting in a decrease in air density.\\
+where $P_0$ and $T_0$ are, respectively, pressure and temperature at sea level (\SI{103125}{\pascal}, \SI{288.15}{\kelvin}), $g$ is the gravitational field strength, L is the temperature lapse rate (\SI{0.0065}{\kelvin\per\metre}). At higher altitudes, the air molecules can spread out further resulting in a decrease in air density.\\
 The molar fraction of water vapour can be obtained through equation (\ref{molar})
 \begin{equation} \label{molar}
 x_w = \frac{n_w}{n_T}
 \end{equation}
-From here, it was a case of getting the number of moles for each major component of the atmosphere - nitrogen, oxygen, argon, and water vapour - using equation (\ref{components}):
+From here, the number of moles for each major component of the atmosphere - nitrogen, oxygen, argon, and water vapour - was obtained using equation (\ref{components}):
 \begin{equation} \label{components}
 n_T - n_w = n_O + n_N + n_{Ar}
 \end{equation}
@@ -191,15 +201,15 @@ n_O = 0.20195(n_T - n_w)
 \begin{equation}
 n_{Ar} = 0.0093(n_T - n_w)
 \end{equation}
-By the consideration of the molar masses, the density of air can be calculated by equation (\ref{airdensity}):
+By the consideration of the molar masses, the density of air can be calculated by the equation (\ref{airdensity}):
 \begin{equation} \label{airdensity}
 \rho = \frac{((M_N P_{N}) + (M_O P_{O}) + (M_{Ar} P_{Ar}))}{RT}
 \end{equation}
 where $P$ is the partial pressure of an element, found by equation (\ref{ppressures}):
-\begin{equation} \label{ppressures}
+\begin{equation} \label{pressures}
 P = \frac{n_x RT}{V}
 \end{equation}
-where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions \cite{Legg2017}.
+where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions. \cite{Legg2017}
 
 \subsection{Flight}
 \subsubsection{Simple golf ball}
@@ -240,7 +250,6 @@ y=v_0 t \sin{\theta}-\frac{1}{2} g t^2
 \end{figure}
 
 Figures (1-2) show the maximum range is when the loft angle at 45.0\degree, as predicted by the equations of projectile motion.
-
 \subsubsection{Smooth golf ball experiencing drag}
 The drag equation (\ref{drageqn})
 \begin{equation} \label{drageqn}
@@ -269,19 +278,20 @@ where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a cl
 \end{figure}
 
 Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
-However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds}) \cite{Alam2011}:
+However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
 \begin{equation} \label{reynolds}
 R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
-Using data from Firoz, Alam and Steiner\cite{Alam2011}, we used Python to construct a quartic fit as shown in Figure (5).\\
+Using data from \textit{Alam 2011}\cite{Alam2011}, Python was used to construct a quartic fit of drag coeffiecient as a function of Reynolds Number, as shown in Figure (5).\\
 A quartic approximation is best as any greater degree would begin to oscillate too much at the edges (Runge's phenomenon). Likewise, a lesser degree would be too linear to give any meaningful relation.\\
-One of the limitions of this approach is that we did not have any data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation would not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To get around this, the coefficient of drag is fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
+One of the limitions of this approach is that there is no data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation does not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To overcome this, the drag coefficient was fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
+
 
 \begin{figure}[H]
 \centering
-\caption{Coefficient of drag as a function of Reynolds number with curve of best fit}
+\caption{Drag coefficient as a function of Reynolds number with curve of best fit}
 \includegraphics[scale=0.6]{reynolds}
 \end{figure}
 
@@ -300,13 +310,13 @@ Applying the approxmation for the coefficient of drag, the optimum loft angle de
 
 
 \subsubsection{Smooth golf ball experiencing lift}
-Lift on a golf ball is caused by the Magnus effect, which is dependent on the backspin of the ball. The equation is similar to the drag equation, however the direction of the force is perpendicular to both angular velocity and translational velocity, unlike in the drag equation.
+Lift on a golf ball is caused by the Magnus effect, which is dependent on the backspin of the ball. The equation is similar to the drag equation, however the direction of the force is perpendicular to both angular velocity and translational velocity.
 
 \begin{equation} \label{lifteqn}
 F_l = \frac{1}{2} \rho_{air} C_{l} |v|^2 (\hat{\omega} \times \hat{v})
 \end{equation}
 
-where $C_l$ is dependent on the spin parameter of the ball according to [whoever found this equation].
+where $C_l$ is dependent on the spin parameter of the ball according to \cite{Bearman1976}.
 \begin{equation} \label{clifteqn}
 C_l = -3.25 S^2 + 1.99 S
 \end{equation}
@@ -331,7 +341,7 @@ S = \frac{r|\omega|}{|v|}
   showstringspaces=false
 }
 
-\textit{The model was written using Python version 3.8, on a Linux machine, although earlier versions (i.e. 3.5) should work. It requires the following Python packages: NumPy, SciPy, and Matplotlib. Use ./model3d.py -h for a list of parameters. It also supports 3d plots, though these are experimental. The source code is also hosted as a git repository at \url{https://github.com/s-ballantyne/gdp}. Note: occasionally you may see some artefacts (straight lines along y=0, or out-of-place points on a carry distance against theta plot). I believe this is due to stiffness switching in the underlying implementation of odeint. Should have no effect on other results and seems to only happen when there is backspin}.
+\textit{The model was written using Python version 3.8, on a Linux machine, although earlier versions (i.e. 3.5) should work. It requires the following Python packages: NumPy, SciPy, and Matplotlib. Use ./model3d.py -h for a list of parameters. It also supports 3d plots, though these are experimental. The source code is also hosted as a git repository at \url{https://github.com/s-ballantyne/gdp}.}
 \begin{lstlisting}[language=Python, caption=Python model), style=PythonStyle, basicstyle=\tiny]
 #!/usr/bin/env python3
 
