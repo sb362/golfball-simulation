@@ -166,10 +166,10 @@ The main atmospheric factor affecting the golf ball’s flight is air density wh
 \begin{equation} \label{pressures}
 \phi = \frac{P_w}{P_{w}^\prime} \times 100
 \end{equation}
-where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibrium vapour pressure, that is the maximum pressure it could be in that given temperature value. This value of $P_{w}^\prime$ can be obtained by Antoine's equation (\ref{antoine}):
+where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibrium vapour pressure, that is the maximum pressure it could be in that given temperature value. This value of $P_{w}^\prime$ can be obtained by Antoine's equation (\ref{antoine}) \cite{Roizard2014}:
 \begin{equation} \label{antoine}
 P_{w}^\prime = e^{\frac{A-B}{C+T}}
-\end{equation} \cite{Roizard2014}
+\end{equation}
 where $T$ is the temperature in K and $A$, $B$, and $C$ are are component specific constants for the given medium. Through the use of Dalton's law for partial pressures, the molar fraction of elements which compose the atmosphere can be calculated using equation (\ref{daltons}):
 \begin{equation} \label{daltons}
 x_w = \frac{P_w}{P_T}
@@ -178,10 +178,10 @@ where $x_w$ is the molar fraction of water vapour and $n_T$ is the total number 
 \begin{equation} \label{idealgaslaw}
 P_T V = n_T R T
 \end{equation}
-where $P_T$ is the total pressure, which is found using the barometric formula (\ref{barometric}):
+where $P_T$ is the total pressure, which is found using the barometric formula (\ref{barometric}) \cite{BerberanSantos1997}:
 \begin{equation} \label{barometric}
 P_T = P_0 e^{\frac{-Mg}{R T_0} h}
-\end{equation} \cite{BerberanSantos1997}
+\end{equation}
 where $P_0$ and $T_0$ are, respectively, pressure and temperature at sea level (\SI{103125}{\pascal}, \SI{288.15}{\kelvin}), $g$ is the gravitational field strength, L is the temperature lapse rate (\SI{0.0065}{\kelvin\per\metre}). At higher altitudes, the air molecules can spread out further resulting in a decrease in air density.\\
 The molar fraction of water vapour can be obtained through equation (\ref{molar})
 \begin{equation} \label{molar}
@@ -284,7 +284,7 @@ R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
-Using data from Figure 3 of \cite{Alam2011}, Python was used to construct a quartic fit of drag coeffiecient as a function of Reynolds Number, as shown in Figure (5).\\
+Using data from \textit{Alam 2011}\cite{Alam2011}, Python was used to construct a quartic fit of drag coeffiecient as a function of Reynolds Number, as shown in Figure (5).\\
 A quartic approximation is best as any greater degree would begin to oscillate too much at the edges (Runge's phenomenon). Likewise, a lesser degree would be too linear to give any meaningful relation.\\
 One of the limitions of this approach is that there is no data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation does not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To overcome this, the drag coefficient was fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
 
