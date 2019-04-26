@@ -121,8 +121,7 @@ v_{bfn}=(1+e)v_{ci} \frac{\cos{\theta}}{1+\frac{m}{M}}
 \begin{equation} \label{clubspeed2}
 v_{bfp}=-v_{ci} \frac{\sin{\theta}}{1+\frac{m}{M}+\frac{mr^2}{I}}
 \end{equation}
-These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations
-(\ref{initialvelocity}-\ref{launchanglephi})
+These two vector components can be added to yield $v_{bo}$ and $\phi_{bo}$, the velocity and its direction for the ball on departure; equations (\ref{initialvelocity}-\ref{launchanglephi})\cite{Penner2001}
 \begin{equation} \label{initialvelocity}
 v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
 \end{equation}
@@ -130,7 +129,7 @@ v_{bo}=v_{bf}=\sqrt{v_{bfn}^2+v_{bfp}^2}
 \phi_{bo}=\theta+\tan^{-1}{\frac{v_{bfp}}{v_{bfn}}}
 \end{equation}
 
-Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution}).
+Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ for impact speeds of \SI{37}{\metre\per\second} to values of around $0.72$ for impact speeds of \SI{50}{\metre\per\second}. Applying a linear fit gives the empirical equation (\ref{restitution})\cite{Penner2001}.
 \begin{equation} \label{restitution}
 e=0.86-0.0029 v_{impact} \cos{\theta}
 \end{equation}
@@ -157,7 +156,7 @@ When this relative humidity increases then since humid air is lighter than dry a
 \begin{equation} \label{pressures}
 \phi = \frac{P_w}{P_{w}^\prime} \times 100
 \end{equation}
-where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibrium vapour pressure, that is the maximum pressure it could be in that given temperature value. This value of $P_{w}^\prime$ can be obtained by Antoine's equation (\ref{antoine}):
+where $P_w$ is the pressure for water vapour and $P_{w}^\prime$ is the equilibrium vapour pressure, that is the maximum pressure it could be in that given temperature value. This value of $P_{w}^\prime$ can be obtained by Antoine's equation (\ref{antoine}) \cite{Roizard2014}:
 \begin{equation} \label{antoine}
 P_{w}^\prime = e^{\frac{A-B}{C+T}}
 \end{equation}
@@ -169,7 +168,7 @@ where $x_w$ is the molar fraction of water vapour and $n_T$ is the total number 
 \begin{equation} \label{idealgaslaw}
 P_T V = n_T R T
 \end{equation}
-where $P_T$ is the total pressure, which is found using the barometric formula (\ref{barometric}):
+where $P_T$ is the total pressure, which is found using the barometric formula (\ref{barometric}) \cite{BerberanSantos1997}:
 \begin{equation} \label{barometric}
 P_T = P_0 e^{\frac{-Mg}{R T_0} h}
 \end{equation}
@@ -200,7 +199,7 @@ where $P$ is the partial pressure of an element, found by equation (\ref{ppressu
 \begin{equation} \label{ppressures}
 P = \frac{n_x RT}{V}
 \end{equation}
-where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions.
+where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions \cite{Legg2017}.
 
 \subsection{Flight}
 \subsubsection{Simple golf ball}
@@ -220,7 +219,7 @@ v_x=v_0 \cos{\theta}
 \begin{equation} \label{simplevely}
 v_y=v_0 \sin{\theta}-gt
 \end{equation}
-Integrating equations (\ref{simplevelx}-\ref{simplevely}) with respect to time yields the displacement as a function of time to give equations (\ref{simpleposx}-\ref{simpleposy}):
+Integrating equations (\ref{simplevelx}-\ref{simplevely}) with respect to time yields the displacement as a function of time to give equations (\ref{simpleposx}-\ref{simpleposy}) \cite{Penner2001}:
 \begin{equation} \label{simpleposx}
 x=v_0 t \cos{\theta}
 \end{equation}
@@ -270,13 +269,13 @@ where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a cl
 \end{figure}
 
 Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
-However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by:
+However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
 \begin{equation} \label{reynolds}
 R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
-Using data from [whereever we found the Reynolds number data], we used Python to construct a quartic fit as shown in Figure (5).\\
+Using data from Firoz, Alam and Steiner\cite{Alam2011}, we used Python to construct a quartic fit as shown in Figure (5).\\
 A quartic approximation is best as any greater degree would begin to oscillate too much at the edges (Runge's phenomenon). Likewise, a lesser degree would be too linear to give any meaningful relation.\\
 One of the limitions of this approach is that we did not have any data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation would not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To get around this, the coefficient of drag is fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
 
