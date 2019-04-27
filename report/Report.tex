@@ -102,24 +102,11 @@ The recommended loft angle to maximise the flight distance based on a club speed
 
 The recommended loft angle to maximise the flight distance based on a club speed of \SI{51.4}{\metre\per\second} for the Sentosa, is \SI{13.2}{\degree} which produces a carry distance of \SI{183}{\metre}.
  
-
-
-
-
-
-
 \begin{figure}[H]
 \centering
 \caption{Effect of club speed on carry distance and optimum loft angle, $\omega_{spin}=$ \SI{300}{\radian\per\second}, $v_i =$ \SI{50}{\metre\per\second}}
 \includegraphics[scale=0.6]{effectofairdensity2}
 \end{figure}
-
-
-
-
-
-
-
 
 \section{Theory}
 
@@ -130,7 +117,7 @@ The following assumptions are made throughout the report and model:
   \item[$\cdot$] height of the tee is negligible;
   \item[$\cdot$] gravitational field strength is constant (\SI{9.81}{\metre\per\second^{2}}) and does not flucuate with height;
   \item[$\cdot$] driver is roughly a flat plate and strikes the ball precisely at the center, with no draw or fade;
-  \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be neglible;
+  \item[$\cdot$] the mass of the club head is significantly greater than that of the shaft, so we consider the shaft's influence to be negligible;
   \item[$\cdot$] the golf ball is a Titleist Pro V1x, with a mass of \SI{45.93}{\gram}, diameter of \SI{42.67}{\milli\metre}, a moment of inertia of \SI{0.009145}{\gram\cdot\metre^2}, and 352 circular dimples.
 \end{description}
 
@@ -167,13 +154,11 @@ Lieberman and Johnson give values for $e$ decreasing from approximately $0.76$ f
 e=0.86-0.0029 v_{impact} \cos{\theta}
 \end{equation}
 
-
 \begin{figure}[H]
 \centering
 \caption{Loft angle and spin}
 \includegraphics[scale=0.6]{loftangleandspin}
 \end{figure}
-
 
 \subsection{Flight conditions}
 The main atmospheric factor affecting the golf ball’s flight is air density which is dependent on air pressure, temperature and humidity. When air density increases, there is increased resistance against the ball during its flight, thus the maximum carry distance is less. Air molecules have greater kinetic energy as the temperature of the air increases, causing them to occupy a larger volume. This results in a decrease in air density. When the air pressure is increased, air density also increases as more collisions between particles occur. The relative humidity of air is a measure of the water vapour relative to temperature and is the percentage of water vapour that could potentially be held in the air at that given temperature.  The air density of humid air is less than dry air. Relative humidity is given by equation (\ref{pressures}):
@@ -220,7 +205,7 @@ By the consideration of the molar masses, the density of air can be calculated b
 \rho = \frac{((M_N P_{N}) + (M_O P_{O}) + (M_{Ar} P_{Ar}))}{RT}
 \end{equation}
 where $P$ is the partial pressure of an element, found by equation (\ref{ppressures}):
-\begin{equation} \label{zppressures}
+\begin{equation} \label{ppressures}
 P = \frac{n_x RT}{V}
 \end{equation}
 where $n_x$ is the number of moles for a given element. Consequently, this allowed the air density to be found for each course based on environmental conditions. \cite{Legg2017}
@@ -263,9 +248,9 @@ y=v_0 t \sin{\theta}-\frac{1}{2} g t^2
 \includegraphics[scale=0.6]{simplerange}
 \end{figure}
 
-Figures (1-2) show the maximum range is when the loft angle at 45.0\degree, as predicted by the equations of projectile motion.
+Figures (9-10) show the maximum range is when the loft angle at 45.0\degree, as predicted by the equations of projectile motion.
 \subsubsection{Smooth golf ball experiencing drag}
-The drag equation (\ref{drageqn})
+The drag equation (\ref{drageqn}) is
 \begin{equation} \label{drageqn}
 \vec{F_{d}} = \frac{1}{2} A C_{d} \rho_{air} |\vec{v}| \vec{v}
 \end{equation}
@@ -291,14 +276,14 @@ where $k=\frac{1}{2} A C_d \rho_{air}$. These equations already do not have a cl
 \includegraphics[scale=0.6]{dragcdrange}
 \end{figure}
 
-Figure (4) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
+Figure (12) shows that the maximum range is achieved at 40.2\degree, for an initial velocity of \SI{50}{\metre\per\second}. Additionally, the range is significantly decreased when drag was added to the model. The greatest range with drag is about \SI{114}{\metre} versus the previous range of \SI{255}{\metre} at 45.0\degree.
 However, $C_d$ is not constant and depends on the Reynolds number, which is proportional to the velocity of the golf ball. The Reynolds number is given by equation (\ref{reynolds})\cite{Alam2011}:
 \begin{equation} \label{reynolds}
 R=\frac{2vr}{\nu}
 \end{equation}
 where $\nu$ is the kinematic viscosity of air.
 
-Using data from \textit{Alam 2011}\cite{Alam2011}, Python was used to construct a quartic fit of drag coeffiecient as a function of Reynolds Number, as shown in Figure (5).\\
+Using data from \textit{Alam 2011}\cite{Alam2011}, Python was used to construct a quartic fit of drag coeffiecient as a function of Reynolds Number, as shown in Figure (13).\\
 A quartic approximation is best as any greater degree would begin to oscillate too much at the edges (Runge's phenomenon). Likewise, a lesser degree would be too linear to give any meaningful relation.\\
 One of the limitions of this approach is that there is no data above Reynolds number $112,000$ (\SI{38.39}{\meter\per\second}) or below $63,300$ (\SI{21.70}{\meter\per\second}), so the approximation does not hold for those conditions, and may in fact be drastically worse due to the chaotic behaviour of the polynomial at the aforementioned values. To overcome this, the drag coefficient was fixed at 0.8 for Reynolds numbers less than 53,000 and fixed at 0.37 for Reynolds numbers greater than 120,000.
 
@@ -309,7 +294,7 @@ One of the limitions of this approach is that there is no data above Reynolds nu
 \includegraphics[scale=0.6]{reynolds}
 \end{figure}
 
-Applying the approxmation for the coefficient of drag, the optimum loft angle decreases down to about 34.5\degree, shown in figures (6-7).
+Applying the approxmation for the coefficient of drag, the optimum loft angle decreases down to about 34.5\degree, shown in Figures (14-15).
 \begin{figure}[H]
 \centering
 \caption{Trajectory of golf ball with drag considering Reynolds number, $v_i=$ \SI{50}{\metre\per\second}}
@@ -330,7 +315,7 @@ Lift on a golf ball is caused by the Magnus effect, which is dependent on the ba
 F_l = \frac{1}{2} \rho_{air} C_{l} |v|^2 (\hat{\omega} \times \hat{v})
 \end{equation}
 
-where $C_l$ is dependent on the spin parameter of the ball according to \cite{Bearman1976}.
+where $C_l$ is dependent on the spin parameter of the ball according to \textit{Bearman}\cite{Bearman1976}.
 \begin{equation} \label{clifteqn}
 C_l = -3.25 S^2 + 1.99 S
 \end{equation}
@@ -356,7 +341,7 @@ S = \frac{r|\omega|}{|v|}
 }
 
 \textit{The model was written using Python version 3.8, on a Linux machine, although earlier versions (i.e. 3.5) should work. It requires the following Python packages: NumPy, SciPy, and Matplotlib. Use ./model3d.py -h for a list of parameters. It also supports 3d plots, though these are experimental. The source code is also hosted as a git repository at \url{https://github.com/s-ballantyne/gdp}.}
-\begin{lstlisting}[language=Python, caption=Python model), style=PythonStyle, basicstyle=\tiny]
+\begin{lstlisting}[language=Python, caption=Python model, style=PythonStyle, basicstyle=\tiny]
 #!/usr/bin/env python3
 
 import numpy as np
