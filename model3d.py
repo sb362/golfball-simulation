@@ -14,6 +14,9 @@ parser = argparse.ArgumentParser()
 constants = parser.add_argument_group("Constants")
 constants.add_argument("-m", "--mass", default=0.04593, help="Mass of ball (kg)")
 constants.add_argument("-r", "--radius", default=0.04267/2, help="Radius of ball (m)")
+constants.add_argument("-i", "--inertia", type=float, default=9.145e-6, help="Inertia of golf ball")
+
+constants.add_argument("--clubmass", type=float, default=0.2, help="Mass of club head (kg)")
 
 constants.add_argument("-g", "--gravity", type=float, default=9.81, help="For when we get a Mars base (m/s/s)")
 constants.add_argument("-d", "--density", type=float, default=1.225, help="Density of air (kg m^-3)")
@@ -21,25 +24,17 @@ constants.add_argument("--viscosity", type=float, default=1.46e-5, help="Kinemat
 
 # Initial parameters
 initialparams = parser.add_argument_group("Initial parameters")
-#initialparams.add_argument("-vi", "--velocity", type=float, default=50, help="Initial velocity (m/s)")
 initialparams.add_argument("-yi", "--height", type=float, default=0, help="Initial height (m)")
-
-#initialparams.add_argument("-sp", "--spin", type=float, default=0, help="Spin (z)")
-#initialparams.add_argument("-spy", "--spiny", type=float, default=0, help="Spin (y)")
-#initialparams.add_argument("-spx", "--spinx", type=float, default=0, help="Spin (x)")
+initialparams.add_argument("--vclub", type=float, default=51.4, help="Club speed (m/s)")
 
 # Loft angle
-parser.add_argument("-li", "--loftinitial", type=float, default=10, help="Loft angle (initial)")
-parser.add_argument("-lf", "--loftfinal", type=float, default=35, help="Loft angle (final)")
-parser.add_argument("-st", "--step", type=float, default=5, help="Loft angle (step)")
+loftangleparams = parser.add_argument_group("Loft angle parameters")
+loftangleparams.add_argument("-li", "--loftinitial", type=float, default=10, help="Loft angle (initial)")
+loftangleparams.add_argument("-lf", "--loftfinal", type=float, default=35, help="Loft angle (final)")
+loftangleparams.add_argument("-st", "--step", type=float, default=5, help="Loft angle (step)")
 
 # Debugging
 parser.add_argument("-v", "--verbose", action="store_true")
-
-# Ball speed calculations
-parser.add_argument("--clubmass", type=float, default=0.2, help="Mass of club head (kg)")
-parser.add_argument("--vclub", type=float, default=51.4, help="Club speed (m/s)")
-parser.add_argument("--inertia", type=float, default=9.145e-6, help="Inertia of golf ball")
 
 # Parse args
 args = parser.parse_args()
@@ -131,11 +126,12 @@ class BasicGolfball:
 		self.mass = args.mass
 		self.radius = args.radius
 
-		# Coordinates
+		# Position
 		self.x = 0
 		self.y = args.height
 		self.z = 0
 
+		# Velocity
 		self.vx = 0
 		self.vy = 0
 		self.vz = 0
@@ -253,44 +249,43 @@ class LiftGolfball(DragGolfball):
 		return -0.01 * self.rvelocity()
 
 
-if __name__ == "__main__":
-	# Initial conditions
-	for density in [1.128, 0.861, 1.154]:
-		plot.figure()
-		for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
-			ball = LiftGolfball()
-			ball.set_velocity(ball_speed(theta), theta)
-			ball.set_spin([0, 0, ball_spin(theta)])
+# Initial conditions
+density = 1.128
+plot.figure()
+for theta in np.arange(args.loftinitial, args.loftfinal, args.step):
+	ball = LiftGolfball()
+	ball.set_velocity(ball_speed(theta), theta)
+	ball.set_spin([0, 0, ball_spin(theta)])
 
-			res = ball.solve(0, 10)
-			x, y, z = res.T
+	res = ball.solve(0, 10)
+	x, y, z = res.T
 
-			plot.plot(x, y, label="Loft angle: " + format(theta, ".1f"))
+	plot.plot(x, y, label="Loft angle: " + format(theta, ".1f"))
 
-		plot.legend()
-		plot.grid(True)
-		plot.xlabel("Distance (m)")
-		plot.ylabel("Height (m)")
-		plot.title("Ballistic trajectory for air density " + format(density, ".3f") + " kg/m^3")
+plot.legend()
+plot.grid(True)
+plot.xlabel("Distance (m)")
+plot.ylabel("Height (m)")
+plot.title("Ballistic trajectory for air density " + format(density, ".3f") + " kg/m^3")
 
-		plot.figure()
-		xdata = []
-		ydata = []
-		for theta in np.arange(5, 30, 0.5):
-			ball = LiftGolfball()
-			ball.set_velocity(ball_speed(theta), theta)
-			ball.set_spin([0, 0, ball_spin(theta)])
+plot.figure()
+xdata = []
+ydata = []
+for theta in np.arange(5, 30, 0.5):
+	ball = LiftGolfball()
+	ball.set_velocity(ball_speed(theta), theta)
+	ball.set_spin([0, 0, ball_spin(theta)])
 
-			res = ball.solve(0, 10)
-			x, y, z = res.T
+	res = ball.solve(0, 10)
+	x, y, z = res.T
 
-			xdata.append(theta)
-			ydata.append(x[-1])
+	xdata.append(theta)
+	ydata.append(x[-1])
 
-		plot.plot(xdata, ydata, 'o', label="Air density: " + format(density, ".3f"))
-		plot.legend()
-		plot.grid(True)
-		plot.xlabel("Loft angle (m)")
-		plot.ylabel("Carry distance (m)")
+plot.plot(xdata, ydata, 'o', label="Air density: " + format(density, ".3f"))
+plot.legend()
+plot.grid(True)
+plot.xlabel("Loft angle (m)")
+plot.ylabel("Carry distance (m)")
 
-	plot.show()
+plot.show()
